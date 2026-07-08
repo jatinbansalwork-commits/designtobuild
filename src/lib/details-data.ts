@@ -61,7 +61,7 @@ export const KALASH_DETAIL: DetailItem = {
   title: "Kalash",
   description: "Finance",
   seoDescription:
-    "Interactive gold savings app — live prices, streaks, and a phone-frame prototype you can explore.",
+    "Interactive gold savings demo — live prices, savings flows, and a home experience engineers can plug into an existing design.",
   ogAccent: "#118D82",
   categories: ["Design", "Build"],
   portfolioTags: ["Finance"],

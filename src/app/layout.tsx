@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Sans, JetBrains_Mono, Source_Serif_4, Space_Grotesk } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_LOCALE, SITE_NAME, TWITTER_HANDLE } from "@/lib/seo";
-import { getSiteUrl } from "@/lib/site-url";
+import { getAbsoluteUrl, getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const ibmPlexSans = IBM_Plex_Sans({
@@ -34,6 +34,7 @@ const geistMono = JetBrains_Mono({
 });
 
 const siteUrl = getSiteUrl();
+const defaultOgImage = getAbsoluteUrl("/og/home.png");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -74,12 +75,23 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
+    images: [
+      {
+        url: defaultOgImage,
+        secureUrl: defaultOgImage,
+        type: "image/png",
+        width: 1200,
+        height: 630,
+        alt: SITE_NAME,
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     creator: TWITTER_HANDLE,
     title: SITE_NAME,
     description: SITE_DESCRIPTION,
+    images: [defaultOgImage],
   },
   icons: {
     icon: [
