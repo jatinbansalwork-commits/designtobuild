@@ -1,5 +1,11 @@
 export function getSiteUrl() {
-  return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    return process.env.NEXT_PUBLIC_SITE_URL;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return "http://localhost:3000";
 }
 
 export function getDetailPath(slug: string) {
@@ -12,5 +18,8 @@ export function getDetailShareUrl(slug: string, origin?: string) {
 }
 
 export function getKalashAppUrl() {
-  return process.env.NEXT_PUBLIC_KALASH_APP_URL ?? "http://localhost:3001";
+  if (process.env.NEXT_PUBLIC_KALASH_APP_URL) {
+    return process.env.NEXT_PUBLIC_KALASH_APP_URL;
+  }
+  return getSiteUrl();
 }
