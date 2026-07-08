@@ -3,12 +3,7 @@
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
 
-/** Seed baselines — kept in sync with `/api/views/[slug]`. */
-const VIEW_SEEDS: Record<string, number> = {
-  kalash: 89,
-  finguard: 150,
-  saltmine: 322,
-};
+const CACHE_PREFIX = "dtb-views-cache:";
 
 function formatViewCount(n: number) {
   if (n < 1000) return n.toLocaleString("en-US");
@@ -20,6 +15,25 @@ function formatViewCount(n: number) {
   return `${Number.isInteger(rounded) ? rounded.toFixed(0) : rounded.toFixed(1)}M`;
 }
 
+function readCachedViews(slug: string): number | null {
+  try {
+    const raw = sessionStorage.getItem(`${CACHE_PREFIX}${slug}`);
+    if (!raw) return null;
+    const n = Number(raw);
+    return Number.isFinite(n) ? n : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeCachedViews(slug: string, views: number) {
+  try {
+    sessionStorage.setItem(`${CACHE_PREFIX}${slug}`, String(views));
+  } catch {
+    // ignore quota / private mode
+  }
+}
+
 interface DetailViewCountProps {
   slug: string;
   /** When true (popup), records a visit. Cards should pass false. */
@@ -29,39 +43,53 @@ interface DetailViewCountProps {
   className?: string;
 }
 
-/** Instagram / Dribbble-style view count. */
+/** Instagram / Dribbble-style view count — wait for live total; never flash seed then jump. */
 export function DetailViewCount({
   slug,
   record = true,
   compact = false,
   className = "",
 }: DetailViewCountProps) {
-  const [views, setViews] = useState<number | null>(VIEW_SEEDS[slug] ?? null);
+  const [views, setViews] = useState<number | null>(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    const storageKey = `dtb-viewed:${slug}`;
+    const viewedKey = `dtb-viewed:${slug}`;
+
+    // Instant paint only when we already know the live total from this session.
+    const cached = readCachedViews(slug);
+    if (cached != null) {
+      setViews(cached);
+      setReady(true);
+    } else {
+      setViews(null);
+      setReady(false);
+    }
 
     const run = async () => {
       try {
-        const already = sessionStorage.getItem(storageKey) === "1";
+        const already = sessionStorage.getItem(viewedKey) === "1";
         const shouldRecord = record && !already;
-        if (shouldRecord) sessionStorage.setItem(storageKey, "1");
+        if (shouldRecord) sessionStorage.setItem(viewedKey, "1");
 
         const res = await fetch(`/api/views/${encodeURIComponent(slug)}`, {
           method: shouldRecord ? "POST" : "GET",
           cache: "no-store",
         });
         if (!res.ok) {
-          if (shouldRecord) sessionStorage.removeItem(storageKey);
+          if (shouldRecord) sessionStorage.removeItem(viewedKey);
+          if (!cancelled) setReady(true);
           return;
         }
         const data = (await res.json()) as { views?: number };
         if (typeof data.views === "number" && !cancelled) {
+          writeCachedViews(slug, data.views);
           setViews(data.views);
+          setReady(true);
         }
       } catch {
-        // Silent — view chrome is optional.
+        if (!cancelled) setReady(true);
       }
     };
 
@@ -75,10 +103,10 @@ export function DetailViewCount({
     ? `inline-flex items-center gap-1 text-[12px] text-text-tertiary ${className}`
     : `inline-flex items-center gap-1.5 text-[13px] text-text-tertiary ${className}`;
 
-  if (views == null) {
+  if (!ready || views == null) {
     return (
       <span className={baseClass} aria-hidden>
-        <Eye className={compact ? "size-3.5 opacity-70" : "size-3.5 opacity-70"} strokeWidth={2} />
+        <Eye className="size-3.5 opacity-70" strokeWidth={2} />
         <span
           className={`animate-pulse rounded bg-text-tertiary/20 ${
             compact ? "h-2.5 w-6" : "h-3 w-8"
@@ -93,11 +121,7 @@ export function DetailViewCount({
       className={baseClass}
       title={`${views.toLocaleString("en-US")} views`}
     >
-      <Eye
-        className={compact ? "size-3.5 opacity-80" : "size-3.5 opacity-80"}
-        strokeWidth={2}
-        aria-hidden
-      />
+      <Eye className="size-3.5 opacity-80" strokeWidth={2} aria-hidden />
       <span className="tabular-nums text-text-secondary">
         {formatViewCount(views)}
         {compact ? null : (
