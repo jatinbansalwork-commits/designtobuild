@@ -75,7 +75,8 @@ type StatusFilter = "all" | "pending" | "done";
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] as const;
 const SUCCESS_TOP_HEIGHTS = [98, 92, 95, 104, 149, 101, 86];
 const SUCCESS_STRIPE_HEIGHTS = [25, 28, 27, 30, 31, 27, 24];
-const SUCCESS_RATES = [58, 62, 60, 64, 67, 61, 57];
+/** Peak day is treated as 100%; other days scaled from the previous 67% peak. */
+const SUCCESS_RATES = [87, 93, 90, 96, 100, 91, 85];
 const SUCCESS_STRIPE_PATTERN =
   "repeating-linear-gradient(135deg, #dfe5ee 0px, #dfe5ee 2px, #eef2f7 2px, #eef2f7 6px)";
 
@@ -1122,7 +1123,7 @@ export function SaltmineFinGuardDashboard({
             </div>
           </section>
 
-          <section className={`col-span-7 row-start-2 flex h-full min-h-0 flex-col ${CARD_CLASS}`}>
+          <section className="col-span-7 row-start-2 flex h-full min-h-0 flex-col overflow-hidden rounded-[28px] bg-white p-5 pb-0 shadow-[0_10px_30px_rgba(15,23,42,0.05)] ring-1 ring-black/[0.04]">
             <div className="flex items-center justify-between gap-4">
               <div>
                 <p className={CARD_TITLE_HERO}>Transaction History</p>
@@ -1189,7 +1190,7 @@ export function SaltmineFinGuardDashboard({
               </span>
             </p>
 
-            <div className="no-scrollbar mt-3 flex-1 space-y-6 overflow-y-auto">
+            <div className="no-scrollbar mt-3 min-h-0 flex-1 space-y-4 overflow-y-auto pb-3">
               {filteredTransactions.length === 0 ? (
                 <p className="rounded-[18px] bg-[#f8f9fb] px-4 py-8 text-center text-[13px] text-[#666]">
                   No transactions match your filters.

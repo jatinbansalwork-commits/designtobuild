@@ -35,7 +35,12 @@ export type DetailMedia =
 export interface DetailItem {
   slug: string;
   title: string;
+  /** Short category/tag label used in UI filters (e.g. Finance, SaaS). */
   description?: string;
+  /** Longer copy for social share previews and meta description. */
+  seoDescription: string;
+  /** Accent used on generated Open Graph / Twitter cards. */
+  ogAccent: string;
   categories: DetailCategory[];
   portfolioTags?: string[];
   /** Free-form descriptive chips shown alongside categories in the detail meta */
@@ -55,15 +60,17 @@ export const KALASH_DETAIL: DetailItem = {
   slug: "kalash",
   title: "Kalash",
   description: "Finance",
+  seoDescription:
+    "Interactive gold savings app — live prices, streaks, and a phone-frame prototype you can explore.",
+  ogAccent: "#118D82",
   categories: ["Design", "Build"],
   portfolioTags: ["Finance"],
-  extraTags: ["Live"],
   projectUrl: getKalashAppUrl(),
   date: "July 8, 2026",
   author: "Rene Wang",
   authorHandle: "renedotwang",
   editorNote:
-    "Live Kalash home — spacing, type, and market prices stay synced with the prototype.",
+    "Interactive Kalash home in a phone frame — live prices, savings, and home UI stay synced with the prototype.",
   media: {
     type: "color",
     color: "#F1F8F7",
@@ -80,6 +87,9 @@ export const FINGUARD_DETAIL: DetailItem = {
   slug: "finguard",
   title: "FinGuard",
   description: "SaaS",
+  seoDescription:
+    "Interactive fintech dashboard — transactions, spend overview, and profile flows in a live iPad mockup.",
+  ogAccent: "#4F46E5",
   categories: ["Build"],
   portfolioTags: ["SaaS"],
   extraTags: ["Inspired"],
@@ -87,7 +97,7 @@ export const FINGUARD_DETAIL: DetailItem = {
   author: "Rene Wang",
   authorHandle: "renedotwang",
   editorNote:
-    "Interactive SaaS dashboard in an iPad frame — transactions, spend charts, and profile states.",
+    "Interactive FinGuard dashboard in an iPad frame — transactions, spend charts, and profile states stay synced with the prototype.",
   media: {
     type: "color",
     color: "#F3F4F6",
@@ -106,6 +116,9 @@ export const SALTMINE_DETAIL: DetailItem = {
   slug: "saltmine",
   title: "Saltmine",
   description: "SaaS",
+  seoDescription:
+    "Interactive workplace planning flow — plan particulars, locations, and cost goals in a live iPad mockup.",
+  ogAccent: "#7C3AED",
   categories: ["Build", "Design"],
   portfolioTags: ["SaaS"],
   date: "July 6, 2026",

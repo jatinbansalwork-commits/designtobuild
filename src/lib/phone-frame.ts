@@ -1,19 +1,34 @@
 import { IPHONE_17 } from "@/kalash/lib/iphone-17-device";
 
-/** Circular corner radius that scales with phone width and height independently. */
-function proportionalRadius(radiusPx: number) {
-  const horizontal = (radiusPx / IPHONE_17.width) * 100;
-  const vertical = (radiusPx / IPHONE_17.height) * 100;
+/** Elliptical corner radius as % of an element's own box. */
+function proportionalRadius(radiusPx: number, widthPx: number, heightPx: number) {
+  const horizontal = (radiusPx / widthPx) * 100;
+  const vertical = (radiusPx / heightPx) * 100;
   return `${horizontal}% / ${vertical}%`;
 }
 
 const bezelWidthPercent = (IPHONE_17.borderWidthPx / IPHONE_17.width) * 100;
+const screenWidthPx = IPHONE_17.width - IPHONE_17.borderWidthPx * 2;
+const screenHeightPx = IPHONE_17.height - IPHONE_17.borderWidthPx * 2;
+/** Keep inner curve nested under the bezel (border-box radius − border). */
+const nestedScreenRadiusPx = Math.max(
+  0,
+  Math.min(IPHONE_17.screenRadiusPx, IPHONE_17.bezelRadiusPx - IPHONE_17.borderWidthPx),
+);
 
 /** Shared phone frame tokens — proportional radius/border at any mockup size. */
 export const PHONE_FRAME = {
   aspectRatio: `${IPHONE_17.width} / ${IPHONE_17.height}`,
-  bezelRadius: proportionalRadius(IPHONE_17.bezelRadiusPx),
-  screenRadius: proportionalRadius(IPHONE_17.screenRadiusPx),
+  bezelRadius: proportionalRadius(
+    IPHONE_17.bezelRadiusPx,
+    IPHONE_17.width,
+    IPHONE_17.height,
+  ),
+  screenRadius: proportionalRadius(
+    nestedScreenRadiusPx,
+    screenWidthPx,
+    screenHeightPx,
+  ),
   borderWidth: `max(3px, ${bezelWidthPercent}%)`,
   borderColor: "#000",
   backgroundColor: "#000",
@@ -48,4 +63,5 @@ export const phoneScreenInset = {
 
 export const phoneScreenStyle = {
   borderRadius: PHONE_FRAME.screenRadius,
+  backgroundColor: "#fff",
 } as const;

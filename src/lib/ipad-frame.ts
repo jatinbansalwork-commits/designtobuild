@@ -7,20 +7,37 @@ export const IPAD_LANDSCAPE = {
   borderWidthPx: 18,
 } as const;
 
-function proportionalRadius(radiusPx: number) {
-  const horizontal = (radiusPx / IPAD_LANDSCAPE.width) * 100;
-  const vertical = (radiusPx / IPAD_LANDSCAPE.height) * 100;
+function proportionalRadius(radiusPx: number, widthPx: number, heightPx: number) {
+  const horizontal = (radiusPx / widthPx) * 100;
+  const vertical = (radiusPx / heightPx) * 100;
   return `${horizontal}% / ${vertical}%`;
 }
 
 const bezelWidthPercent =
   (IPAD_LANDSCAPE.borderWidthPx / IPAD_LANDSCAPE.width) * 100;
+const screenWidthPx = IPAD_LANDSCAPE.width - IPAD_LANDSCAPE.borderWidthPx * 2;
+const screenHeightPx = IPAD_LANDSCAPE.height - IPAD_LANDSCAPE.borderWidthPx * 2;
+const nestedScreenRadiusPx = Math.max(
+  0,
+  Math.min(
+    IPAD_LANDSCAPE.screenRadiusPx,
+    IPAD_LANDSCAPE.bezelRadiusPx - IPAD_LANDSCAPE.borderWidthPx,
+  ),
+);
 
 /** Shared iPad frame tokens — proportional radius/border at any mockup size. */
 export const IPAD_FRAME = {
   aspectRatio: `${IPAD_LANDSCAPE.width} / ${IPAD_LANDSCAPE.height}`,
-  bezelRadius: proportionalRadius(IPAD_LANDSCAPE.bezelRadiusPx),
-  screenRadius: proportionalRadius(IPAD_LANDSCAPE.screenRadiusPx),
+  bezelRadius: proportionalRadius(
+    IPAD_LANDSCAPE.bezelRadiusPx,
+    IPAD_LANDSCAPE.width,
+    IPAD_LANDSCAPE.height,
+  ),
+  screenRadius: proportionalRadius(
+    nestedScreenRadiusPx,
+    screenWidthPx,
+    screenHeightPx,
+  ),
   borderWidth: `max(6px, ${bezelWidthPercent}%)`,
   borderColor: "#0b0b0d",
   backgroundColor: "#0b0b0d",

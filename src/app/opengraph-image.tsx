@@ -14,31 +14,87 @@ export default function OpenGraphImage() {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          justifyContent: "center",
+          justifyContent: "space-between",
           backgroundColor: "#09090b",
-          padding: "80px",
+          padding: "72px 80px",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
         <div
           style={{
-            fontSize: 72,
-            fontWeight: 600,
-            color: "#fafafa",
-            letterSpacing: "-0.03em",
-            marginBottom: 24,
+            position: "absolute",
+            top: -140,
+            right: -60,
+            width: 440,
+            height: 440,
+            borderRadius: 999,
+            background:
+              "radial-gradient(circle, rgba(79,70,229,0.45) 0%, transparent 70%)",
           }}
-        >
-          {SITE_NAME}
-        </div>
+        />
         <div
           style={{
-            fontSize: 32,
-            lineHeight: 1.4,
+            position: "absolute",
+            bottom: -180,
+            left: -80,
+            width: 500,
+            height: 500,
+            borderRadius: 999,
+            background:
+              "radial-gradient(circle, rgba(255,122,40,0.32) 0%, transparent 68%)",
+          }}
+        />
+
+        <div
+          style={{
+            display: "flex",
+            fontSize: 28,
+            fontWeight: 600,
             color: "#a1a1aa",
-            maxWidth: 900,
+            letterSpacing: "-0.02em",
           }}
         >
-          {SITE_DESCRIPTION}
+          Portfolio showcase
+        </div>
+
+        <div style={{ display: "flex", flexDirection: "column", gap: 28, maxWidth: 980 }}>
+          <div
+            style={{
+              fontSize: 80,
+              fontWeight: 700,
+              color: "#fafafa",
+              letterSpacing: "-0.04em",
+              lineHeight: 1.02,
+            }}
+          >
+            {SITE_NAME}
+          </div>
+          <div
+            style={{
+              fontSize: 34,
+              lineHeight: 1.35,
+              color: "#d4d4d8",
+              maxWidth: 920,
+            }}
+          >
+            {SITE_DESCRIPTION}
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            gap: 16,
+            fontSize: 22,
+            color: "#a1a1aa",
+          }}
+        >
+          <span style={{ display: "flex" }}>Kalash</span>
+          <span style={{ display: "flex", color: "#52525b" }}>·</span>
+          <span style={{ display: "flex" }}>FinGuard</span>
+          <span style={{ display: "flex", color: "#52525b" }}>·</span>
+          <span style={{ display: "flex" }}>Saltmine</span>
         </div>
       </div>
     ),

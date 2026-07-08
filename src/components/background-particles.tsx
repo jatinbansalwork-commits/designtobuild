@@ -29,7 +29,7 @@ const DEFAULT_COLORS = ["#4f46e5", "#ff7a28", "#0ea5e9"];
 
 export function BackgroundParticles({
   colors = DEFAULT_COLORS,
-  count = 50,
+  count = 35,
   baseSize = 14,
   speed = 1.2,
   repulsionRadius = 160,

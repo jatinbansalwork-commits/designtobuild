@@ -95,7 +95,7 @@ export function SaltminePlanParticulars({
       <div className="grid min-h-0 flex-1 grid-cols-[minmax(0,46fr)_minmax(0,54fr)] gap-6 px-8 py-5">
         <div className="flex min-h-0 min-w-0 flex-col border-r border-[#ECEEF2] pr-6">
           <h1 className="text-[24px] font-semibold leading-[1.2] tracking-[-0.03em] text-[#111]">
-            Name & duration
+            Plan Particulars and duration
           </h1>
 
           <label className="mt-5 block">

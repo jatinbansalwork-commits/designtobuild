@@ -9,7 +9,7 @@ import {
   isPortfolioFilter,
 } from "@/lib/portfolio-filters";
 
-type TagVariant = "domain" | "type" | "status";
+type TagVariant = "domain" | "type";
 
 function EditorNoteText({ text }: { text: string }) {
   const parts = text.split(/(`[^`]+`)/g);
@@ -48,9 +48,7 @@ function MetaTagPill({
   const variantClass =
     variant === "domain"
       ? "border-transparent bg-text-primary/10 text-text-primary"
-      : variant === "status"
-        ? "border-transparent bg-emerald-500/15 text-emerald-300"
-        : "border-border/60 bg-transparent text-text-secondary";
+      : "border-border/60 bg-transparent text-text-secondary";
 
   const className = `inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[12px] font-medium transition-colors ${variantClass}`;
 
@@ -91,11 +89,10 @@ function MetaTagPill({
 
 function getStatusTag(detail: DetailItem): string | null {
   const fromExtra = detail.extraTags?.find((tag) =>
-    ["Live", "Inspired", "Coming soon"].includes(tag),
+    ["Inspired", "Coming soon"].includes(tag),
   );
   if (fromExtra) return fromExtra;
   if (/coming soon/i.test(detail.date)) return "Coming soon";
-  if (detail.media.type === "color" && detail.media.mockup?.flow) return "Live";
   return null;
 }
 
@@ -121,7 +118,7 @@ export function DetailPopupMeta({
       ? "border-transparent bg-amber-500/15 text-amber-200"
       : statusTag === "Inspired"
         ? "border-transparent bg-violet-500/15 text-violet-200"
-        : undefined;
+        : "border-border/60 bg-transparent text-text-secondary";
 
   return (
     <div className="relative flex flex-col px-6 pb-6 pt-5 sm:px-8 sm:pb-8 sm:pt-6">
@@ -148,14 +145,8 @@ export function DetailPopupMeta({
         ))}
         {statusTag ? (
           <span
-            className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[12px] font-medium ${
-              statusClass ??
-              "border-transparent bg-emerald-500/15 text-emerald-300"
-            }`}
+            className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-2.5 py-1 text-[12px] font-medium ${statusClass}`}
           >
-            {statusTag === "Live" ? (
-              <span className="size-1.5 rounded-full bg-emerald-400" aria-hidden />
-            ) : null}
             {statusTag}
           </span>
         ) : null}
