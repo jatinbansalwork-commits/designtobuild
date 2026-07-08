@@ -3,11 +3,12 @@ import { DetailKalashFlowEmbed } from "@/components/detail-kalash-flow-embed";
 import { KalashAppPreview } from "@/components/kalash-app-preview";
 import { KalashSaveMorePreview } from "@/components/kalash-save-more-preview";
 import { SaltmineFinGuardPreview } from "@/components/saltmine-finguard-preview";
+import { SaltminePlanPreview } from "@/components/saltmine-plan-preview";
 import { PHONE_FRAME, phoneFrameDropShadowStyle, phoneFrameStyle, phoneScreenInset, phoneScreenStyle } from "@/lib/phone-frame";
 import { IPAD_FRAME, ipadFrameDropShadowStyle, ipadFrameStyle, ipadScreenInset, ipadScreenStyle } from "@/lib/ipad-frame";
 import Image from "next/image";
 
-type MockupFlow = "kalash" | "kalash-save-more" | "finguard";
+type MockupFlow = "kalash" | "kalash-save-more" | "finguard" | "saltmine-plan";
 
 interface DetailMobileMockupProps {
   color: string;
@@ -82,13 +83,13 @@ export function DetailMobileMockup({
   preview = false,
 }: DetailMobileMockupProps) {
   const isKalashFlow = flow === "kalash" || flow === "kalash-save-more";
-  const isFinguardFlow = flow === "finguard";
+  const isIpadFlow = flow === "finguard" || flow === "saltmine-plan";
   const showKalashFlow = isKalashFlow && (preview || !compact);
   const showKalashLivePreview = isKalashFlow && compact && !preview;
   const embedInitialScreen =
     flow === "kalash-save-more" ? "save-more" : "app";
 
-  if (isFinguardFlow) {
+  if (isIpadFlow) {
     const ipadSizeClass = compact
       ? "w-[101.2%] max-w-[101.2%]"
       : preview
@@ -105,7 +106,11 @@ export function DetailMobileMockup({
         }}
       >
         <IpadDeviceFrame className={`relative z-10 ${ipadSizeClass}`}>
-          <SaltmineFinGuardPreview interactive={preview} />
+          {flow === "finguard" ? (
+            <SaltmineFinGuardPreview interactive={preview} />
+          ) : (
+            <SaltminePlanPreview interactive={preview} />
+          )}
         </IpadDeviceFrame>
       </div>
     );

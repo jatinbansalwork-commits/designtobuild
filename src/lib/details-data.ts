@@ -11,7 +11,7 @@ export type DetailCategory =
 export type DetailMockup = {
   aspectRatio: string;
   imageSrc?: string;
-  flow?: "kalash" | "kalash-save-more" | "finguard";
+  flow?: "kalash" | "kalash-save-more" | "finguard" | "saltmine-plan";
 };
 
 export type DetailCanvasFrame = {
@@ -100,13 +100,10 @@ export const FINGUARD_DETAIL: DetailItem = {
 };
 
 /** @deprecated Use FINGUARD_DETAIL */
-export const SALTMINE_DETAIL = FINGUARD_DETAIL;
-
-/** @deprecated Use FINGUARD_DETAIL */
 export const KALASH_BUY_GOLD_DETAIL = FINGUARD_DETAIL;
 
-export const COMING_SOON_DETAIL: DetailItem = {
-  slug: "coming-soon",
+export const SALTMINE_DETAIL: DetailItem = {
+  slug: "saltmine",
   title: "Saltmine",
   description: "Finance",
   categories: ["Build"],
@@ -119,23 +116,29 @@ export const COMING_SOON_DETAIL: DetailItem = {
   media: {
     type: "color",
     color: "#F3F4F6",
-    aspectRatio: "920 / 710",
-    canvasFrame: { width: 828, height: 639, flow: "saltmine-plan" },
+    aspectRatio: "424 / 396",
+    mockup: {
+      aspectRatio: "16 / 10",
+      flow: "saltmine-plan",
+    },
   },
 };
+
+/** @deprecated Use SALTMINE_DETAIL */
+export const COMING_SOON_DETAIL = SALTMINE_DETAIL;
 
 /** Portfolio grid row — shown below the featured card on the home page. */
 export const GRID_DETAILS: DetailItem[] = [
   KALASH_DETAIL,
   FINGUARD_DETAIL,
-  COMING_SOON_DETAIL,
+  SALTMINE_DETAIL,
 ];
 
 /** @deprecated Use GRID_DETAILS */
 export const DETAILS: DetailItem[] = GRID_DETAILS;
 
 export function getDetailBySlug(slug: string): DetailItem | undefined {
-  const normalizedSlug = slug === "saltmine" ? "finguard" : slug;
+  const normalizedSlug = slug === "coming-soon" ? "saltmine" : slug;
   if (normalizedSlug === KALASH_DETAIL.slug) return KALASH_DETAIL;
   return GRID_DETAILS.find((detail) => detail.slug === normalizedSlug);
 }

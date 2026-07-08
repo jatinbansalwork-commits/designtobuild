@@ -37,7 +37,7 @@ export function SaltminePlanParticulars() {
       }}
     >
       {/* Step navigation */}
-      <header className="flex shrink-0 items-center justify-between border-b border-[#F0F1F4] px-8 pb-0 pt-5">
+      <header className="flex shrink-0 items-center justify-between border-b border-[#F0F1F4] pb-0 pl-0 pr-8 pt-5">
         <nav className="flex items-center gap-6">
           {STEPS.map((step, index) => {
             const active = index === 0;
@@ -77,7 +77,7 @@ export function SaltminePlanParticulars() {
       </header>
 
       {/* Main content */}
-      <div className="grid min-h-0 flex-1 grid-cols-[1fr_1.05fr] gap-6 px-8 py-6">
+      <div className="grid min-h-0 flex-1 grid-cols-[1fr_1.05fr] gap-6 py-6 pl-0 pr-0">
         {/* Form column */}
         <div className="flex min-h-0 flex-col">
           <h1 className="text-[22px] font-semibold tracking-[-0.02em] text-[#111]">
@@ -138,33 +138,19 @@ export function SaltminePlanParticulars() {
         </div>
 
         {/* Illustration column */}
-        <div className="relative min-h-0 overflow-hidden rounded-2xl bg-[#F5F3FF] ring-1 ring-[#EDE9FE]">
-          <div className="absolute inset-0 opacity-40">
-            <div
-              className="absolute -right-8 -top-8 size-40 rounded-full bg-[#C4B5FD] blur-3xl"
-              aria-hidden
-            />
-            <div
-              className="absolute -bottom-6 left-8 size-32 rounded-full bg-[#A5B4FC] blur-3xl"
-              aria-hidden
-            />
-          </div>
-
-          <div className="relative flex h-full items-center justify-center p-4">
-            <Image
-              src={SALTMINE_PLAN_ILLUSTRATION_SRC}
-              alt=""
-              width={420}
-              height={420}
-              className="h-full w-full object-contain"
-              priority
-            />
-          </div>
+        <div className="relative min-h-0 overflow-hidden bg-[#F5F3FF] ring-1 ring-[#EDE9FE]">
+          <Image
+            src={SALTMINE_PLAN_ILLUSTRATION_SRC}
+            alt=""
+            fill
+            className="object-cover object-center"
+            priority
+          />
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="flex shrink-0 justify-end border-t border-[#F0F1F4] px-8 py-4">
+      <footer className="flex shrink-0 justify-end border-t border-[#F0F1F4] py-4 pl-0 pr-8">
         <button
           type="button"
           onMouseEnter={() => setNextHover(true)}
