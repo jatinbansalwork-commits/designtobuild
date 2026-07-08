@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import Image from "next/image";
 import type { DetailItem } from "@/lib/details-data";
 import { DetailProjectTitle } from "@/components/detail-project-title";
+import { DetailViewCount } from "@/components/detail-view-count";
 import {
   getProjectFilterLabel,
   isPortfolioFilter,
@@ -175,7 +176,9 @@ export function DetailPopupMeta({
         </div>
       ) : null}
 
-      <div className="mt-5 flex items-center gap-2 text-[13px] text-text-tertiary">
+      <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-text-tertiary">
+        <DetailViewCount slug={detail.slug} />
+        <span aria-hidden>·</span>
         <time dateTime={detail.date}>{detail.date}</time>
         {domainTag ? (
           <>

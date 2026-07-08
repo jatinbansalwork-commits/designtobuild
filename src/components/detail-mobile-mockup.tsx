@@ -34,7 +34,7 @@ function IpadDeviceFrame({
       className={`relative shrink-0 ${className ?? ""}`}
       style={{ ...ipadFrameDropShadowStyle, aspectRatio: IPAD_FRAME.aspectRatio }}
     >
-      <div className="relative h-full w-full overflow-hidden" style={ipadFrameStyle}>
+      <div className="relative h-full w-full overflow-hidden isolate" style={ipadFrameStyle}>
         <div
           className="absolute overflow-hidden"
           style={{ ...ipadScreenStyle, ...ipadScreenInset }}
@@ -60,7 +60,7 @@ function PhoneDeviceFrame({
       className={`relative shrink-0 ${className ?? ""}`}
       style={{ ...phoneFrameDropShadowStyle, aspectRatio }}
     >
-      <div className="relative h-full w-full overflow-hidden" style={phoneFrameStyle}>
+      <div className="relative h-full w-full overflow-hidden isolate" style={phoneFrameStyle}>
         <div
           className="absolute overflow-hidden"
           style={{ ...phoneScreenStyle, ...phoneScreenInset }}

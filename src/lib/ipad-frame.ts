@@ -21,9 +21,11 @@ const nestedScreenRadiusPx = Math.max(
   0,
   Math.min(
     IPAD_LANDSCAPE.screenRadiusPx,
-    IPAD_LANDSCAPE.bezelRadiusPx - IPAD_LANDSCAPE.borderWidthPx,
+    IPAD_LANDSCAPE.bezelRadiusPx - IPAD_LANDSCAPE.borderWidthPx - 2,
   ),
 );
+
+const borderWidth = `max(6px, ${bezelWidthPercent}%)`;
 
 /** Shared iPad frame tokens — proportional radius/border at any mockup size. */
 export const IPAD_FRAME = {
@@ -38,7 +40,7 @@ export const IPAD_FRAME = {
     screenWidthPx,
     screenHeightPx,
   ),
-  borderWidth: `max(6px, ${bezelWidthPercent}%)`,
+  borderWidth,
   borderColor: "#0b0b0d",
   backgroundColor: "#0b0b0d",
   dropShadow:
@@ -61,13 +63,14 @@ export const ipadFrameDropShadowStyle = {
 } as const;
 
 export const ipadScreenInset = {
-  top: `${(IPAD_LANDSCAPE.borderWidthPx / IPAD_LANDSCAPE.height) * 100}%`,
-  right: `${(IPAD_LANDSCAPE.borderWidthPx / IPAD_LANDSCAPE.width) * 100}%`,
-  bottom: `${(IPAD_LANDSCAPE.borderWidthPx / IPAD_LANDSCAPE.height) * 100}%`,
-  left: `${(IPAD_LANDSCAPE.borderWidthPx / IPAD_LANDSCAPE.width) * 100}%`,
+  top: borderWidth,
+  right: borderWidth,
+  bottom: borderWidth,
+  left: borderWidth,
 } as const;
 
 export const ipadScreenStyle = {
   borderRadius: IPAD_FRAME.screenRadius,
   backgroundColor: "#f3f4f6",
+  clipPath: `inset(0 round ${IPAD_FRAME.screenRadius})`,
 } as const;
