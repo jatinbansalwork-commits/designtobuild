@@ -9,9 +9,11 @@ import { DetailVideoPlayer } from "@/components/detail-video-player";
 export function DetailPanel({
   detail,
   preview = false,
+  onFilterSelect,
 }: {
   detail: DetailItem;
   preview?: boolean;
+  onFilterSelect?: (filter: string) => void;
 }) {
   const media = (
     <div className="w-full shrink-0">
@@ -77,7 +79,7 @@ export function DetailPanel({
   return (
     <>
       {media}
-      <DetailPopupMeta detail={detail} />
+      <DetailPopupMeta detail={detail} onFilterSelect={onFilterSelect} />
     </>
   );
 }

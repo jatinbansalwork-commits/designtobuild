@@ -443,9 +443,14 @@ body {
   height: 18px;
   border-radius: 9999px;
   border: 3px solid white;
-  background: linear-gradient(135deg, #8b5cf6, #6366f1);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.45);
+  background: #6366f1;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
   cursor: pointer;
+}
+
+.saltmine-plan-slider::-webkit-slider-runnable-track {
+  height: 18px;
+  background: transparent;
 }
 
 .saltmine-plan-slider::-moz-range-thumb {
@@ -453,7 +458,39 @@ body {
   height: 18px;
   border-radius: 9999px;
   border: 3px solid white;
-  background: linear-gradient(135deg, #8b5cf6, #6366f1);
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.45);
+  background: #6366f1;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
   cursor: pointer;
+}
+
+.saltmine-plan-slider::-moz-range-track {
+  height: 18px;
+  background: transparent;
+  border: 0;
+}
+
+@keyframes saltmine-slider-pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(99, 102, 241, 0.16),
+      0 6px 14px rgba(99, 102, 241, 0.4);
+  }
+}
+
+.saltmine-plan-slider--active::-webkit-slider-thumb {
+  animation: saltmine-slider-pulse 0.9s ease-in-out infinite;
+}
+
+.saltmine-plan-slider--active::-moz-range-thumb {
+  animation: saltmine-slider-pulse 0.9s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saltmine-plan-slider--active::-webkit-slider-thumb,
+  .saltmine-plan-slider--active::-moz-range-thumb {
+    animation: none;
+  }
 }

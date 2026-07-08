@@ -6,17 +6,23 @@ import {
   SALTMINE_PLAN_WIDTH,
   SaltminePlanParticulars,
 } from "@/components/saltmine-plan-particulars";
+import { SaltmineLocation } from "@/components/saltmine-location";
 
 interface SaltminePlanPreviewProps {
   interactive?: boolean;
 }
 
-/** Scaled live Saltmine Plan Particulars UI for portfolio cards and detail modal. */
+type SaltmineStep = "particulars" | "location";
+
+/** Scaled live Saltmine flow for portfolio cards and detail modal. */
 export function SaltminePlanPreview({
   interactive = false,
 }: SaltminePlanPreviewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
+  const [step, setStep] = useState<SaltmineStep>("particulars");
+  const [planName, setPlanName] = useState("Strategy 2024");
+  const [durationLabel, setDurationLabel] = useState("3 months");
 
   useEffect(() => {
     const el = containerRef.current;
@@ -38,7 +44,7 @@ export function SaltminePlanPreview({
   return (
     <div
       ref={containerRef}
-      className={`absolute inset-0 overflow-hidden bg-white ${
+      className={`absolute inset-0 overflow-hidden bg-[#FAFAFA] ${
         interactive ? "" : "pointer-events-none"
       }`}
       aria-hidden={!interactive}
@@ -52,7 +58,22 @@ export function SaltminePlanPreview({
           transformOrigin: "center center",
         }}
       >
-        <SaltminePlanParticulars />
+        {step === "particulars" ? (
+          <SaltminePlanParticulars
+            onContinue={(payload) => {
+              setPlanName(payload.planName);
+              setDurationLabel(payload.durationLabel);
+              setStep("location");
+            }}
+          />
+        ) : (
+          <SaltmineLocation
+            planName={planName}
+            durationLabel={durationLabel}
+            onBack={() => setStep("particulars")}
+            onContinue={() => setStep("location")}
+          />
+        )}
       </div>
     </div>
   );

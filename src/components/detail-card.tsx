@@ -22,6 +22,7 @@ export function DetailCard({
   onFilterSelect?: (filter: string) => void;
 }) {
   const filterLabel = getProjectFilterLabel(detail);
+  const typeLabel = detail.categories[0];
 
   return (
     <Link
@@ -59,27 +60,34 @@ export function DetailCard({
               <h3 className="text-xl font-medium tracking-tight text-text-primary">
                 {detail.title}
               </h3>
-              {filterLabel && onFilterSelect ? (
-                <button
-                  type="button"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    onFilterSelect(filterLabel);
-                  }}
-                  className={`text-left text-[11px] font-medium uppercase tracking-[0.16em] transition-colors ${
-                    activeFilter === filterLabel
-                      ? "bg-text-primary px-2.5 py-1 text-surface"
-                      : "text-text-secondary hover:text-text-primary"
-                  }`}
-                >
-                  {filterLabel}
-                </button>
-              ) : (
-                <p className="line-clamp-1 text-sm leading-relaxed text-text-secondary">
-                  {detail.description ?? "\u00A0"}
-                </p>
-              )}
+              <div className="flex flex-wrap items-center gap-2">
+                {filterLabel && onFilterSelect ? (
+                  <button
+                    type="button"
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      onFilterSelect(filterLabel);
+                    }}
+                    className={`rounded-full px-2.5 py-1 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-tertiary/40 ${
+                      activeFilter === filterLabel
+                        ? "bg-text-primary text-surface"
+                        : "bg-text-primary/10 text-text-primary hover:bg-text-primary/15"
+                    }`}
+                  >
+                    {filterLabel}
+                  </button>
+                ) : filterLabel ? (
+                  <span className="rounded-full bg-text-primary/10 px-2.5 py-1 text-[12px] font-medium text-text-primary">
+                    {filterLabel}
+                  </span>
+                ) : null}
+                {typeLabel ? (
+                  <span className="rounded-full border border-border/60 px-2.5 py-1 text-[12px] font-medium text-text-secondary">
+                    {typeLabel}
+                  </span>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>

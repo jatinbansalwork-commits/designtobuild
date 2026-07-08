@@ -93,7 +93,7 @@ export function DetailMobileMockup({
     const ipadSizeClass = compact
       ? "w-[101.2%] max-w-[101.2%]"
       : preview
-        ? "w-[73%] max-w-[52.7rem]"
+        ? "w-[80%] max-w-[52.7rem]"
         : "w-[88%] max-w-[52rem]";
     return (
       <div

@@ -55,15 +55,15 @@ export const KALASH_DETAIL: DetailItem = {
   slug: "kalash",
   title: "Kalash",
   description: "Finance",
-  categories: ["Design"],
+  categories: ["Design", "Build"],
   portfolioTags: ["Finance"],
-  extraTags: ["Build"],
+  extraTags: ["Live"],
   projectUrl: getKalashAppUrl(),
-  date: "June 28, 2026",
+  date: "July 8, 2026",
   author: "Rene Wang",
   authorHandle: "renedotwang",
   editorNote:
-    "Portfolio preview renders the live Kalash home screen — spacing, typography, and market prices stay synced with the prototype instead of a static screenshot.",
+    "Live Kalash home — spacing, type, and market prices stay synced with the prototype.",
   media: {
     type: "color",
     color: "#F1F8F7",
@@ -79,15 +79,15 @@ export const KALASH_DETAIL: DetailItem = {
 export const FINGUARD_DETAIL: DetailItem = {
   slug: "finguard",
   title: "FinGuard",
-  description: "Finance",
+  description: "SaaS",
   categories: ["Build"],
-  portfolioTags: ["Finance"],
+  portfolioTags: ["SaaS"],
   extraTags: ["Inspired"],
   date: "July 7, 2026",
   author: "Rene Wang",
   authorHandle: "renedotwang",
   editorNote:
-    "FinGuard SaaS dashboard replica inside an interactive iPad mockup — desktop layout with transaction history, spending charts, and profile completion states.",
+    "Interactive SaaS dashboard in an iPad frame — transactions, spend charts, and profile states.",
   media: {
     type: "color",
     color: "#F3F4F6",
@@ -105,14 +105,14 @@ export const KALASH_BUY_GOLD_DETAIL = FINGUARD_DETAIL;
 export const SALTMINE_DETAIL: DetailItem = {
   slug: "saltmine",
   title: "Saltmine",
-  description: "Finance",
-  categories: ["Build"],
-  portfolioTags: ["Finance"],
-  date: "Coming soon",
+  description: "SaaS",
+  categories: ["Build", "Design"],
+  portfolioTags: ["SaaS"],
+  date: "July 6, 2026",
   author: "Rene Wang",
   authorHandle: "renedotwang",
   editorNote:
-    "Saltmine workforce planning — Plan Particulars step with duration controls, step navigation, and isometric location preview inside the portfolio mockup frame.",
+    "Interactive Plan Particulars — duration, locations, and live preview in an iPad frame.",
   media: {
     type: "color",
     color: "#F3F4F6",

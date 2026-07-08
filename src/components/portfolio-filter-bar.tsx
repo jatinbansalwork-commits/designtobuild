@@ -9,7 +9,7 @@ interface PortfolioFilterBarProps {
 
 export function PortfolioFilterBar({ value, onChange }: PortfolioFilterBarProps) {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
+    <div className="flex flex-wrap items-center justify-center gap-2">
       {PORTFOLIO_FILTERS.map((filter) => {
         const active = value === filter;
 
@@ -18,10 +18,10 @@ export function PortfolioFilterBar({ value, onChange }: PortfolioFilterBarProps)
             key={filter}
             type="button"
             onClick={() => onChange(filter)}
-            className={`text-[11px] font-medium uppercase tracking-[0.16em] transition-colors ${
+            className={`rounded-full px-3 py-1.5 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-text-tertiary/40 ${
               active
-                ? "bg-text-primary px-2.5 py-1 text-surface"
-                : "text-text-secondary hover:text-text-primary"
+                ? "bg-text-primary text-surface"
+                : "border border-border/60 text-text-secondary hover:bg-surface-hover hover:text-text-primary"
             }`}
           >
             {filter}

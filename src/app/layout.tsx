@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, Source_Serif_4, Space_Grotesk } from "next/font/google";
-import { GeistMono } from "geist/font/mono";
+import { IBM_Plex_Sans, JetBrains_Mono, Source_Serif_4, Space_Grotesk } from "next/font/google";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_LOCALE, SITE_NAME, TWITTER_HANDLE } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/site-url";
@@ -24,6 +23,13 @@ const sourceSerif4 = Source_Serif_4({
   variable: "--font-source-serif-4",
   subsets: ["latin"],
   weight: ["600", "700"],
+  display: "swap",
+});
+
+const geistMono = JetBrains_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -91,7 +97,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${ibmPlexSans.variable} ${spaceGrotesk.variable} ${sourceSerif4.variable} ${GeistMono.variable}`}
+      className={`dark ${ibmPlexSans.variable} ${spaceGrotesk.variable} ${sourceSerif4.variable} ${geistMono.variable}`}
     >
       <body className="flex min-h-screen flex-col bg-surface text-text-primary antialiased">
         <SiteJsonLd />

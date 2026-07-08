@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import { BackgroundParticles } from "@/components/background-particles";
 import { DetailCard } from "@/components/detail-card";
 import { HomeDetailGrid } from "@/components/home-detail-grid";
+import { PortfolioFilterProvider } from "@/components/portfolio-filter-context";
 import { KALASH_DETAIL } from "@/lib/details-data";
 
 function CuratorCredit() {
@@ -23,7 +26,7 @@ function CuratorCredit() {
 
 export function HomePageContent() {
   return (
-    <>
+    <PortfolioFilterProvider>
       <BackgroundParticles fullScreen />
       <div className="relative z-10">
         <section
@@ -48,6 +51,6 @@ export function HomePageContent() {
           <HomeDetailGrid />
         </section>
       </div>
-    </>
+    </PortfolioFilterProvider>
   );
 }

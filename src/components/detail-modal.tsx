@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Undo2, X } from "lucide-react";
 import type { DetailItem } from "@/lib/details-data";
 import { DetailPanel } from "@/components/detail-panel";
+import { usePortfolioFilter } from "@/components/portfolio-filter-context";
 import { ShareDetailButton } from "@/components/share-detail-button";
 
 interface DetailModalProps {
@@ -15,6 +16,7 @@ interface DetailModalProps {
 
 export function DetailModal({ detail, standalone = false }: DetailModalProps) {
   const router = useRouter();
+  const portfolioFilter = usePortfolioFilter();
 
   const close = useCallback(() => {
     if (standalone) {
@@ -23,6 +25,18 @@ export function DetailModal({ detail, standalone = false }: DetailModalProps) {
     }
     router.back();
   }, [router, standalone]);
+
+  const onFilterSelect = useCallback(
+    (filter: string) => {
+      if (portfolioFilter) {
+        portfolioFilter.setFilter(filter);
+        close();
+        return;
+      }
+      router.replace(`/?filter=${encodeURIComponent(filter)}`);
+    },
+    [close, portfolioFilter, router],
+  );
 
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -70,7 +84,7 @@ export function DetailModal({ detail, standalone = false }: DetailModalProps) {
           className="pointer-events-auto cursor-pointer rounded-full border border-border bg-surface-secondary/90 p-2.5 text-text-secondary transition-colors hover:bg-surface-hover hover:text-text-primary"
           aria-label="Close preview"
         >
-          <X className="h-5 w-5" aria-hidden />
+          <X className="h-5 w-5" />
         </button>
       </div>
 
@@ -81,7 +95,11 @@ export function DetailModal({ detail, standalone = false }: DetailModalProps) {
         aria-label={`${detail.title} preview`}
       >
         <div className="detail-modal-panel flex h-full max-h-[inherit] flex-col overflow-y-auto">
-          <DetailPanel detail={detail} preview />
+          <DetailPanel
+            detail={detail}
+            preview
+            onFilterSelect={onFilterSelect}
+          />
         </div>
       </article>
     </>
