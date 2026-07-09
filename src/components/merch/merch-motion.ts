@@ -33,6 +33,14 @@ export const FP_SPRING = {
   layout: { type: "spring" as const, stiffness: 360, damping: 36, mass: 0.8 },
 };
 
+/** Framer drag release — maps gesture spring feel to inertia options. */
+export const FP_DRAG_TRANSITION = {
+  bounceStiffness: 280,
+  bounceDamping: 32,
+  power: 0.25,
+  timeConstant: 180,
+};
+
 /** Hero carousel slide + shirt fill — keep in lockstep. */
 export const FP_PRODUCT_PREVIEW_TRANSITION = FP_SPRING.gesture;
 

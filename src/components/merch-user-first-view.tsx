@@ -8,7 +8,7 @@ import {
   ChevronRight,
   Zap,
 } from "lucide-react";
-import { FP_DURATION, FP_EASE, FP_PRODUCT_PREVIEW_TRANSITION, FP_SPRING, fpReveal } from "@/components/merch/merch-motion";
+import { FP_DURATION, FP_EASE, FP_DRAG_TRANSITION, FP_PRODUCT_PREVIEW_TRANSITION, FP_SPRING, fpReveal } from "@/components/merch/merch-motion";
 import { MerchImageAiActionSheet } from "@/components/merch/merch-image-ai-action-sheet";
 import { notoSans } from "@/components/merch/canva-font";
 import { IOS_SAFARI_COMPACT_HEIGHT, IosSafariChrome } from "@/components/ios-safari-chrome";
@@ -392,7 +392,7 @@ export function MerchUserFirstView({
                   : undefined
               }
               dragElastic={0.08}
-              dragTransition={FP_SPRING.gesture}
+              dragTransition={FP_DRAG_TRANSITION}
               onDragEnd={handleHeroDragEnd}
             >
               {HERO_IMAGES.map((image, index) => (
