@@ -3,12 +3,13 @@ import { DetailKalashFlowEmbed } from "@/components/detail-kalash-flow-embed";
 import { KalashAppPreview } from "@/components/kalash-app-preview";
 import { KalashSaveMorePreview } from "@/components/kalash-save-more-preview";
 import { SaltmineFinGuardPreview } from "@/components/saltmine-finguard-preview";
+import { MerchPhoneShell } from "@/components/merch-phone-shell";
 import { SaltminePlanPreview } from "@/components/saltmine-plan-preview";
 import { PHONE_FRAME, phoneFrameDropShadowStyle, phoneFrameStyle, phoneScreenInset, phoneScreenStyle } from "@/lib/phone-frame";
 import { IPAD_FRAME, ipadFrameDropShadowStyle, ipadFrameStyle, ipadScreenInset, ipadScreenStyle } from "@/lib/ipad-frame";
 import Image from "next/image";
 
-type MockupFlow = "kalash" | "kalash-save-more" | "finguard" | "saltmine-plan";
+type MockupFlow = "kalash" | "kalash-save-more" | "finguard" | "saltmine-plan" | "merch";
 
 interface DetailMobileMockupProps {
   color: string;
@@ -84,10 +85,32 @@ export function DetailMobileMockup({
 }: DetailMobileMockupProps) {
   const isKalashFlow = flow === "kalash" || flow === "kalash-save-more";
   const isIpadFlow = flow === "finguard" || flow === "saltmine-plan";
+  const isMerchFlow = flow === "merch";
   const showKalashFlow = isKalashFlow && (preview || !compact);
   const showKalashLivePreview = isKalashFlow && compact && !preview;
   const embedInitialScreen =
     flow === "kalash-save-more" ? "save-more" : "app";
+
+  if (isMerchFlow) {
+    const phoneSizeClass = compact
+      ? "h-[90%] w-auto max-w-[46%]"
+      : preview
+        ? "h-[90%] w-auto"
+        : "h-[94%] w-auto max-w-[min(72%,22rem)] md:max-w-[min(36%,24rem)]";
+
+    return (
+      <div
+        className={`relative flex w-full items-center justify-center overflow-hidden ${
+          preview ? "aspect-video" : compact ? "" : "aspect-[4/5] md:aspect-video"
+        }`}
+        style={{ backgroundColor: color, ...(compact && aspectRatio ? { aspectRatio } : {}) }}
+      >
+        <PhoneDeviceFrame className={phoneSizeClass} aspectRatio={mockupAspectRatio}>
+          <MerchPhoneShell interactive={preview} />
+        </PhoneDeviceFrame>
+      </div>
+    );
+  }
 
   if (isIpadFlow) {
     const ipadSizeClass = compact

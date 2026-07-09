@@ -9,12 +9,24 @@ const VIEW_COOKIE_MAX_AGE = 60 * 60 * 12; // 12h — feels like IG/Dribbble uniq
 
 /** Free-looking starting counts so cards don’t open near zero. */
 const VIEW_SEEDS: Record<string, number> = {
+  freshprints: 12,
   kalash: 89,
   finguard: 150,
   saltmine: 322,
 };
 
-const ALLOWED_SLUGS = new Set(Object.keys(VIEW_SEEDS));
+const SLUG_ALIASES: Record<string, string> = {
+  upcoming: "freshprints",
+};
+
+const ALLOWED_SLUGS = new Set([
+  ...Object.keys(VIEW_SEEDS),
+  ...Object.keys(SLUG_ALIASES),
+]);
+
+function resolveViewSlug(slug: string) {
+  return SLUG_ALIASES[slug] ?? slug;
+}
 
 type CounterPayload = {
   count?: number;
@@ -33,11 +45,12 @@ function parseCount(data: CounterPayload | null) {
 }
 
 function displayViews(slug: string, rawCount: number) {
-  return (VIEW_SEEDS[slug] ?? 0) + rawCount;
+  return (VIEW_SEEDS[resolveViewSlug(slug)] ?? 0) + rawCount;
 }
 
 async function getCounter(slug: string) {
-  const res = await fetch(`${COUNTER_BASE}/${encodeURIComponent(slug)}/`, {
+  const counterSlug = resolveViewSlug(slug);
+  const res = await fetch(`${COUNTER_BASE}/${encodeURIComponent(counterSlug)}/`, {
     cache: "no-store",
   });
   if (res.status === 404 || res.status === 400) return 0;
@@ -46,7 +59,8 @@ async function getCounter(slug: string) {
 }
 
 async function incrementCounter(slug: string) {
-  const res = await fetch(`${COUNTER_BASE}/${encodeURIComponent(slug)}/up`, {
+  const counterSlug = resolveViewSlug(slug);
+  const res = await fetch(`${COUNTER_BASE}/${encodeURIComponent(counterSlug)}/up`, {
     cache: "no-store",
   });
   if (!res.ok) throw new Error(`counter up failed: ${res.status}`);

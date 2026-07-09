@@ -13,14 +13,16 @@ const screenHeightPx = IPHONE_17.height - IPHONE_17.borderWidthPx * 2;
 
 /**
  * Keep the screen curve nested under the bezel.
- * Extra 2px inset kills the light fringe that shows at rounded corners when
- * the mockup is scaled down (subpixel / AA mismatch).
+ * Extra inset kills the light fringe at rounded corners when the mockup is
+ * scaled down (subpixel / AA mismatch between % radii and px borders).
  */
+const NESTED_RADIUS_TRIM_PX = 4;
+
 const nestedScreenRadiusPx = Math.max(
   0,
   Math.min(
     IPHONE_17.screenRadiusPx,
-    IPHONE_17.bezelRadiusPx - IPHONE_17.borderWidthPx - 2,
+    IPHONE_17.bezelRadiusPx - IPHONE_17.borderWidthPx - NESTED_RADIUS_TRIM_PX,
   ),
 );
 
@@ -78,6 +80,7 @@ export const phoneScreenInset = {
 export const phoneScreenStyle = {
   borderRadius: PHONE_FRAME.screenRadius,
   backgroundColor: "#fff",
-  // Hard-clip the screen to the nested curve so corners can't fringe.
-  clipPath: `inset(0 round ${PHONE_FRAME.screenRadius})`,
+  overflow: "hidden" as const,
+  // Inset clip hides the white halo that can peek past the black bezel curve.
+  clipPath: `inset(1px round ${PHONE_FRAME.screenRadius})`,
 } as const;

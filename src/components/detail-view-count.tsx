@@ -44,7 +44,7 @@ interface DetailViewCountProps {
 }
 
 /** Instagram / Dribbble-style view count — wait for live total; never flash seed then jump. */
-export function DetailViewCount({
+function DetailViewCountInner({
   slug,
   record = true,
   compact = false,
@@ -57,14 +57,21 @@ export function DetailViewCount({
     let cancelled = false;
     const viewedKey = `dtb-viewed:${slug}`;
 
-    // Instant paint only when we already know the live total from this session.
     const cached = readCachedViews(slug);
     if (cached != null) {
-      setViews(cached);
-      setReady(true);
+      queueMicrotask(() => {
+        if (!cancelled) {
+          setViews(cached);
+          setReady(true);
+        }
+      });
     } else {
-      setViews(null);
-      setReady(false);
+      queueMicrotask(() => {
+        if (!cancelled) {
+          setViews(null);
+          setReady(false);
+        }
+      });
     }
 
     const run = async () => {
@@ -132,4 +139,8 @@ export function DetailViewCount({
       </span>
     </span>
   );
+}
+
+export function DetailViewCount(props: DetailViewCountProps) {
+  return <DetailViewCountInner key={props.slug} {...props} />;
 }

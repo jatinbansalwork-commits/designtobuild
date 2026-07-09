@@ -35,28 +35,37 @@ export function DetailMediaPreview({
     );
   }
 
+  if (media.type === "color" && media.canvasFrame) {
+    return (
+      <div
+        className="relative w-full shrink-0 overflow-hidden bg-surface"
+        style={{ aspectRatio: ratio }}
+      >
+        <div
+          className="flex h-full w-full items-center justify-center"
+          style={{ backgroundColor: media.color }}
+        >
+          <DetailCanvasFrame
+            width={media.canvasFrame.width}
+            height={media.canvasFrame.height}
+            src={media.canvasFrame.src}
+            title={title}
+            fill
+          >
+            <DetailCanvasFrameContent frame={media.canvasFrame} />
+          </DetailCanvasFrame>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="relative w-full shrink-0 overflow-hidden bg-surface"
       style={{ aspectRatio: ratio }}
     >
       {media.type === "color" ? (
-        media.canvasFrame ? (
-          <div
-            className="flex h-full w-full items-center justify-center"
-            style={{ backgroundColor: media.color }}
-          >
-            <DetailCanvasFrame
-              width={media.canvasFrame.width}
-              height={media.canvasFrame.height}
-              src={media.canvasFrame.src}
-              title={title}
-              fill
-            >
-              <DetailCanvasFrameContent frame={media.canvasFrame} />
-            </DetailCanvasFrame>
-          </div>
-        ) : (
+        media.canvasFrame ? null : (
           <div className="h-full w-full" style={{ backgroundColor: media.color }} aria-hidden />
         )
       ) : media.type === "video" ? (

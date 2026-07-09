@@ -126,11 +126,6 @@ export function SaltmineLocation({
     });
   }, [activeSuggestions, query]);
 
-  const selectedSites = useMemo(
-    () => SITES.filter((site) => selectedSiteIds.includes(site.id)),
-    [selectedSiteIds],
-  );
-
   const specificComplete = selectedSiteIds.length > 0;
   const costGap = costTarget - COST_BASELINE;
   const costPercent = clampPercent(
@@ -333,13 +328,6 @@ export function SaltmineLocation({
     const timer = window.setTimeout(() => costInputRef.current?.focus(), 40);
     return () => window.clearTimeout(timer);
   }, [showCostGoal]);
-
-  useEffect(() => {
-    if (scope !== "specific") return;
-    if (selectedSiteIds.length > 0 && !selectedSiteIds.includes(primarySiteId)) {
-      setPrimarySiteId(selectedSiteIds[0]);
-    }
-  }, [primarySiteId, scope, selectedSiteIds]);
 
   return (
     <div
@@ -611,6 +599,8 @@ export function SaltmineLocation({
                     id={`${groupId}-cost-target`}
                     type="text"
                     inputMode="numeric"
+                    pattern="[0-9$,% ]*"
+                    autoComplete="off"
                     value={displayedTarget}
                     onFocus={() => {
                       setGoalEditing(true);
@@ -632,10 +622,20 @@ export function SaltmineLocation({
                         setCostDraft(`${clampPercent(Number.parseInt(raw, 10))}%`);
                         return;
                       }
-                      setCostDraft(event.target.value);
+                      const digits = event.target.value.replace(/[^\d]/g, "");
+                      setCostDraft(digits);
                     }}
                     onBlur={commitCostDraft}
                     onKeyDown={(event) => {
+                      if (
+                        event.key.length === 1 &&
+                        /[a-zA-Z]/.test(event.key) &&
+                        !event.ctrlKey &&
+                        !event.metaKey
+                      ) {
+                        event.preventDefault();
+                        return;
+                      }
                       if (event.key === "Enter") {
                         event.preventDefault();
                         commitCostDraft();

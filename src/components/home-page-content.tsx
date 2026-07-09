@@ -5,7 +5,7 @@ import { BackgroundParticles } from "@/components/background-particles";
 import { DetailCard } from "@/components/detail-card";
 import { HomeDetailGrid } from "@/components/home-detail-grid";
 import { PortfolioFilterProvider } from "@/components/portfolio-filter-context";
-import { KALASH_DETAIL } from "@/lib/details-data";
+import { getDesignOfTheDay } from "@/lib/design-of-the-day";
 
 function CuratorCredit() {
   return (
@@ -43,7 +43,7 @@ export function HomePageContent() {
           </div>
 
           <div className="relative z-10 mt-8 w-full px-4 sm:px-0">
-            <DetailCard detail={KALASH_DETAIL} featured />
+            <DetailCard detail={getDesignOfTheDay()} featured />
           </div>
         </section>
 

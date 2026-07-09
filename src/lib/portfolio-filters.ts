@@ -7,6 +7,7 @@ export const PORTFOLIO_FILTERS = [
   "Food & Drink",
   "Health & Fitness",
   "Lifestyle",
+  "Ecommerce",
   "SaaS",
   "Sports",
 ] as const;

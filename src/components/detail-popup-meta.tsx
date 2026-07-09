@@ -101,6 +101,11 @@ function getTypeTags(detail: DetailItem): string[] {
   return detail.categories;
 }
 
+function detailDateTime(value: string): string {
+  const ms = Date.parse(value);
+  return Number.isNaN(ms) ? value : new Date(ms).toISOString().slice(0, 10);
+}
+
 /** Structured popup footer — name, tags, editor note, date. */
 export function DetailPopupMeta({
   detail,
@@ -179,19 +184,7 @@ export function DetailPopupMeta({
       <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-text-tertiary">
         <DetailViewCount slug={detail.slug} />
         <span aria-hidden>·</span>
-        <time dateTime={detail.date}>{detail.date}</time>
-        {domainTag ? (
-          <>
-            <span aria-hidden>·</span>
-            <span>{domainTag}</span>
-          </>
-        ) : null}
-        {typeTags.length > 0 ? (
-          <>
-            <span aria-hidden>·</span>
-            <span>{typeTags.join(" · ")}</span>
-          </>
-        ) : null}
+        <time dateTime={detailDateTime(detail.date)}>{detail.date}</time>
       </div>
     </div>
   );

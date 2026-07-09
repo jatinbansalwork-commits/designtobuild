@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useLayoutEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Image from "next/image";
 import { KalashAppScreen } from "@/kalash/components/slider/kalash-app-screen";
 import {
@@ -34,9 +34,13 @@ const KALASH_ICON_HOTSPOT = {
 } as const;
 
 export function KalashIphoneHomeLayout() {
-  const [screen, setScreen] = useState<KalashPhoneScreen>("home");
+  const [screen, setScreen] = useState<KalashPhoneScreen>(
+    () => getKalashDevScreen() ?? "home",
+  );
   const [direction, setDirection] = useState(1);
-  const [transitionKind, setTransitionKind] = useState<KalashTransitionKind>("fade");
+  const [transitionKind, setTransitionKind] = useState<KalashTransitionKind>(() =>
+    getKalashDevScreen() ? "fade" : "fade",
+  );
   const [saveInitialAmount, setSaveInitialAmount] = useState(
     SAVE_SCREEN_DEFAULT_AMOUNT,
   );
@@ -50,14 +54,6 @@ export function KalashIphoneHomeLayout() {
     },
     [],
   );
-
-  useLayoutEffect(() => {
-    const devScreen = getKalashDevScreen();
-    if (devScreen) {
-      setScreen(devScreen);
-      setTransitionKind("fade");
-    }
-  }, []);
 
   const goHome = useCallback(() => {
     playClick();

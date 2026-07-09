@@ -30,11 +30,11 @@ export function DetailPanel({
         ) : (
           <div
             className={`flex w-full overflow-hidden ${
-              preview ? "aspect-video p-8" : ""
+              preview ? "aspect-video bg-white p-8" : ""
             }`}
             style={{
               aspectRatio: preview ? undefined : detail.media.aspectRatio,
-              backgroundColor: preview ? undefined : detail.media.color,
+              backgroundColor: preview ? "#ffffff" : detail.media.color,
             }}
           >
             {detail.media.canvasFrame ? (

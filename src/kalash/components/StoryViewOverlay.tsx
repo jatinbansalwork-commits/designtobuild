@@ -48,30 +48,31 @@ export function StoryViewOverlay({
 
   useEffect(() => {
     if (!open) {
-      setCurrentStoryIndex(initialStoryIndex);
+      queueMicrotask(() => setCurrentStoryIndex(initialStoryIndex));
       return;
     }
 
-    setCurrentStoryIndex(initialStoryIndex);
+    queueMicrotask(() => setCurrentStoryIndex(initialStoryIndex));
   }, [open, initialStoryIndex]);
 
   useEffect(() => {
     if (!open || !autoAdvance) return;
 
     const timer = window.setInterval(() => {
-      setCurrentStoryIndex((prev) => prev + 1);
+      setCurrentStoryIndex((prev) => {
+        const next = prev + 1;
+        if (next >= STORY_COUNT) {
+          window.setTimeout(resetAndClose, 0);
+          return prev;
+        }
+        return next;
+      });
     }, STORY_DURATION_MS);
 
     return () => {
       window.clearInterval(timer);
     };
-  }, [open, autoAdvance]);
-
-  useEffect(() => {
-    if (open && autoAdvance && currentStoryIndex >= STORY_COUNT) {
-      resetAndClose();
-    }
-  }, [open, autoAdvance, currentStoryIndex, resetAndClose]);
+  }, [open, autoAdvance, resetAndClose]);
 
   const handleDragEnd = (
     _: MouseEvent | TouchEvent | PointerEvent,

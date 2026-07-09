@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { DetailModal } from "@/components/detail-modal";
 import { buildDetailMetadata } from "@/lib/detail-seo";
 import { GRID_DETAILS, getDetailBySlug } from "@/lib/details-data";
@@ -25,6 +25,8 @@ export async function generateMetadata({ params }: DetailPageProps) {
 
 export default async function DetailPage({ params }: DetailPageProps) {
   const { slug } = await params;
+  if (slug === "upcoming") redirect("/detail/freshprints");
+
   const detail = getDetailBySlug(slug);
   if (!detail) notFound();
 

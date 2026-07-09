@@ -227,6 +227,7 @@ export function SearchToolbar({
                   key={item.slug}
                   type="button"
                   role="option"
+                  aria-selected={false}
                   onMouseDown={(event) => event.preventDefault()}
                   onClick={() => selectSuggestion(item)}
                   className="flex w-full flex-col gap-1 border-b border-border px-4 py-3 text-left transition-colors last:border-b-0 hover:bg-surface-secondary"

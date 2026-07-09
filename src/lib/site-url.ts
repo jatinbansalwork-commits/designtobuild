@@ -43,3 +43,12 @@ export function getKalashAppUrl() {
   }
   return getSiteUrl();
 }
+
+const FRESHPRINTS_PROJECT_URL = "https://freshprints.com";
+
+export function getFreshPrintsProjectUrl() {
+  if (process.env.NEXT_PUBLIC_FRESHPRINTS_PROJECT_URL) {
+    return process.env.NEXT_PUBLIC_FRESHPRINTS_PROJECT_URL;
+  }
+  return FRESHPRINTS_PROJECT_URL;
+}

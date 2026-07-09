@@ -1,4 +1,4 @@
-import { getKalashAppUrl } from "@/lib/site-url";
+import { getFreshPrintsProjectUrl, getKalashAppUrl } from "@/lib/site-url";
 
 export type DetailCategory =
   | "Design"
@@ -11,7 +11,7 @@ export type DetailCategory =
 export type DetailMockup = {
   aspectRatio: string;
   imageSrc?: string;
-  flow?: "kalash" | "kalash-save-more" | "finguard" | "saltmine-plan";
+  flow?: "kalash" | "kalash-save-more" | "finguard" | "saltmine-plan" | "merch";
 };
 
 export type DetailCanvasFrame = {
@@ -70,7 +70,7 @@ export const KALASH_DETAIL: DetailItem = {
   author: "Rene Wang",
   authorHandle: "renedotwang",
   editorNote:
-    "Interactive Kalash home in a phone frame — live prices, savings, and home UI stay synced with the prototype.",
+    "Interactive Kalash savings flow — live gold prices, streak action sheet, story ring, and home launch through splash back to the app.",
   media: {
     type: "color",
     color: "#F1F8F7",
@@ -88,7 +88,7 @@ export const FINGUARD_DETAIL: DetailItem = {
   title: "FinGuard",
   description: "SaaS",
   seoDescription:
-    "Interactive fintech dashboard — transactions, spend overview, and profile flows in a live iPad mockup.",
+    "Interactive fintech dashboard — transactions, spend overview, and profile flows.",
   ogAccent: "#4F46E5",
   categories: ["Build"],
   portfolioTags: ["SaaS"],
@@ -97,7 +97,7 @@ export const FINGUARD_DETAIL: DetailItem = {
   author: "Rene Wang",
   authorHandle: "renedotwang",
   editorNote:
-    "Interactive FinGuard dashboard in an iPad frame — transactions, spend charts, and profile states stay synced with the prototype.",
+    "Interactive FinGuard dashboard — nav across Overview, Operations, and Reports with searchable transactions, spending charts, refreshable findings, and profile and notification popovers.",
   media: {
     type: "color",
     color: "#F3F4F6",
@@ -109,15 +109,41 @@ export const FINGUARD_DETAIL: DetailItem = {
   },
 };
 
-/** @deprecated Use FINGUARD_DETAIL */
-export const KALASH_BUY_GOLD_DETAIL = FINGUARD_DETAIL;
+export const FRESHPRINTS_DETAIL: DetailItem = {
+  slug: "freshprints",
+  title: "FreshPrints - Image AI",
+  description: "Ecommerce",
+  seoDescription:
+    "Merch customization flow — product preview, design tools, and color selection in a mobile-first builder.",
+  ogAccent: "#191960",
+  categories: ["Design", "Build"],
+  portfolioTags: ["Ecommerce"],
+  projectUrl: getFreshPrintsProjectUrl(),
+  date: "July 9, 2026",
+  author: "Rene Wang",
+  authorHandle: "renedotwang",
+  editorNote:
+    "Interactive Image AI merch flow — front/back shirt carousel, color swatches, and a bottom sheet from prompt and style through generate, preview, refine, and apply on the product.",
+  media: {
+    type: "color",
+    color: "#F3F4F6",
+    aspectRatio: "626 / 356",
+    mockup: {
+      aspectRatio: "393 / 852",
+      flow: "merch",
+    },
+  },
+};
+
+/** @deprecated Use FRESHPRINTS_DETAIL */
+export const UPCOMING_SLOT_DETAIL = FRESHPRINTS_DETAIL;
 
 export const SALTMINE_DETAIL: DetailItem = {
   slug: "saltmine",
   title: "Saltmine",
   description: "SaaS",
   seoDescription:
-    "Interactive workplace planning flow — plan particulars, locations, and cost goals in a live iPad mockup.",
+    "Interactive workplace planning flow — plan particulars, locations, and cost goals.",
   ogAccent: "#7C3AED",
   categories: ["Build", "Design"],
   portfolioTags: ["SaaS"],
@@ -125,7 +151,7 @@ export const SALTMINE_DETAIL: DetailItem = {
   author: "Rene Wang",
   authorHandle: "renedotwang",
   editorNote:
-    "Interactive Plan Particulars — duration, locations, and live preview in an iPad frame.",
+    "Interactive Saltmine planning flow — plan particulars with duration slider, location scope and site picker, and cost goal with live preview.",
   media: {
     type: "color",
     color: "#F3F4F6",
@@ -142,6 +168,7 @@ export const COMING_SOON_DETAIL = SALTMINE_DETAIL;
 
 /** Portfolio grid row — shown below the featured card on the home page. */
 export const GRID_DETAILS: DetailItem[] = [
+  FRESHPRINTS_DETAIL,
   KALASH_DETAIL,
   FINGUARD_DETAIL,
   SALTMINE_DETAIL,
@@ -151,7 +178,8 @@ export const GRID_DETAILS: DetailItem[] = [
 export const DETAILS: DetailItem[] = GRID_DETAILS;
 
 export function getDetailBySlug(slug: string): DetailItem | undefined {
-  const normalizedSlug = slug === "coming-soon" ? "saltmine" : slug;
+  const normalizedSlug =
+    slug === "coming-soon" ? "saltmine" : slug === "upcoming" ? "freshprints" : slug;
   if (normalizedSlug === KALASH_DETAIL.slug) return KALASH_DETAIL;
   return GRID_DETAILS.find((detail) => detail.slug === normalizedSlug);
 }
