@@ -53,6 +53,7 @@ export function MerchImageAiActionSheet({
   const promptId = useId();
   const maxColorsId = useId();
   const referenceUploadRef = useRef<HTMLInputElement>(null);
+  const formScrollRef = useRef<HTMLDivElement>(null);
   const [prompt, setPrompt] = useState("");
   const [selectedStyle, setSelectedStyle] = useState(IMAGE_AI_STYLES[0].id);
   const [maxColors, setMaxColors] = useState<number>(IMAGE_AI_MAX_COLOR_OPTIONS[0]);
@@ -146,7 +147,15 @@ export function MerchImageAiActionSheet({
       setGenerationKey(0);
       setGenerationReadyKey(null);
       setProcessedGraphicUrl(null);
+      return;
     }
+
+    // Always open the form from the top — mount-time scrollIntoView on the
+    // selected style tile was jumping the sheet mid-content on phones.
+    const frame = requestAnimationFrame(() => {
+      if (formScrollRef.current) formScrollRef.current.scrollTop = 0;
+    });
+    return () => cancelAnimationFrame(frame);
   }, [open, onPromptFocusChange]);
 
   const selectedStylePreview =
@@ -270,6 +279,7 @@ export function MerchImageAiActionSheet({
                       ) : (
                       <div
                         key="form-body"
+                        ref={formScrollRef}
                         className={FP_SHEET_SCROLL_CLASS}
                         onWheel={fpContainSheetWheel}
                       >

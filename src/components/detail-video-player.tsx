@@ -2,18 +2,29 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play, Volume2, VolumeX } from "lucide-react";
+import { DETAIL_POPUP_MEDIA_CLASS } from "@/lib/detail-popup-media";
+import { useMediaBackdropColor } from "@/hooks/use-media-backdrop-color";
 
 interface DetailVideoPlayerProps {
   src: string;
   title: string;
+  /** Lock to the shared 16:9 popup canvas (FreshPrints rule). */
+  preview?: boolean;
+  fallbackColor?: string;
 }
 
-export function DetailVideoPlayer({ src, title }: DetailVideoPlayerProps) {
+export function DetailVideoPlayer({
+  src,
+  title,
+  preview = false,
+  fallbackColor = "#000000",
+}: DetailVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(true);
   const [muted, setMuted] = useState(true);
   const [speed, setSpeed] = useState(1);
   const [loop, setLoop] = useState(true);
+  const backdrop = useMediaBackdropColor(videoRef, src, fallbackColor);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -27,11 +38,10 @@ export function DetailVideoPlayer({ src, title }: DetailVideoPlayerProps) {
     if (!video) return;
     if (video.paused) {
       void video.play();
-      setPlaying(true);
     } else {
       video.pause();
-      setPlaying(false);
     }
+    setPlaying(!video.paused);
   }
 
   function toggleMute() {
@@ -46,15 +56,28 @@ export function DetailVideoPlayer({ src, title }: DetailVideoPlayerProps) {
   }
 
   return (
-    <div className="group relative w-full overflow-hidden bg-black" style={{ maxHeight: "80vh" }}>
+    <div
+      className={`group relative ${
+        preview ? DETAIL_POPUP_MEDIA_CLASS : "w-full overflow-hidden"
+      }`}
+      style={{
+        backgroundColor: backdrop,
+        ...(preview ? undefined : { maxHeight: "80vh" }),
+      }}
+    >
       <video
         ref={videoRef}
         src={src}
+        crossOrigin="anonymous"
         autoPlay
         loop={loop}
         muted={muted}
         playsInline
-        className="relative z-10 mx-auto h-auto w-full"
+        className={
+          preview
+            ? "absolute inset-0 h-full w-full object-contain"
+            : "relative z-10 mx-auto h-auto w-full"
+        }
         aria-label={title}
       />
 

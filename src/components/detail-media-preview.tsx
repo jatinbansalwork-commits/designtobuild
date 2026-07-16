@@ -61,8 +61,16 @@ export function DetailMediaPreview({
 
   return (
     <div
-      className="relative w-full shrink-0 overflow-hidden bg-surface"
-      style={{ aspectRatio: ratio }}
+      className="relative w-full shrink-0 overflow-hidden"
+      style={{
+        aspectRatio: ratio,
+        backgroundColor:
+          media.type === "color"
+            ? media.color
+            : media.type === "image" || media.type === "video"
+              ? "transparent"
+              : undefined,
+      }}
     >
       {media.type === "color" ? (
         media.canvasFrame ? null : (
@@ -77,6 +85,18 @@ export function DetailMediaPreview({
           autoPlay
           className={cover ? "absolute inset-0 h-full w-full object-cover" : "h-auto w-full"}
           aria-label={title}
+        />
+      ) : /\.gif(?:$|[?#])/i.test(media.src) ? (
+        // eslint-disable-next-line @next/next/no-img-element -- animated GIF needs native img
+        <img
+          src={media.src}
+          alt={title}
+          className={
+            cover
+              ? "absolute inset-0 h-full w-full object-cover"
+              : "h-auto w-full"
+          }
+          draggable={false}
         />
       ) : cover ? (
         <Image

@@ -125,9 +125,6 @@ export function CanvaMultilineInput({
             setFocused(true);
             onFocusChange?.(true);
             onFocus?.(event);
-            requestAnimationFrame(() => {
-              event.currentTarget.scrollIntoView({ block: "center", behavior: "smooth" });
-            });
           }}
           onBlur={(event) => {
             setFocused(false);

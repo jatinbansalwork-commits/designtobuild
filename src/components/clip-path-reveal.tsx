@@ -4,31 +4,51 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-/** FinGuard dashboard accent palette — hero indigo, chart orange, security sky */
+/** Mix of accents so adjacent grid shutters don’t all read as blue. */
 const REVEAL_COLORS_BY_SLUG: Record<string, string> = {
+  freshprints: "#191960",
   kalash: "#118D82",
   finguard: "#4f46e5",
-  saltmine: "#4f46e5",
+  saltmine: "#7C3AED",
 };
 
-const REVEAL_FALLBACK_COLORS = ["#4f46e5", "#ff7a28", "#0ea5e9"] as const;
+const REVEAL_FALLBACK_COLORS = [
+  "#ff7a28", // orange
+  "#4f46e5", // indigo
+  "#10b981", // emerald
+  "#f43f5e", // rose
+  "#0ea5e9", // sky
+  "#eab308", // yellow
+  "#8b5cf6", // violet
+  "#14b8a6", // teal
+  "#f97316", // amber-orange
+  "#ec4899", // pink
+] as const;
 
 function colorForKey(key: string) {
   if (REVEAL_COLORS_BY_SLUG[key]) return REVEAL_COLORS_BY_SLUG[key];
 
+  // Prefer slot index so consecutive cards cycle through the full palette
+  const slotMatch = /^slot-(\d+)$/.exec(key);
+  if (slotMatch) {
+    const index = Number(slotMatch[1]) - 1;
+    return REVEAL_FALLBACK_COLORS[index % REVEAL_FALLBACK_COLORS.length];
+  }
+
   let hash = 0;
   for (let i = 0; i < key.length; i++) {
-    hash = (hash + key.charCodeAt(i) * (i + 1)) % REVEAL_FALLBACK_COLORS.length;
+    hash = (hash * 31 + key.charCodeAt(i)) >>> 0;
   }
-  return REVEAL_FALLBACK_COLORS[hash];
+  return REVEAL_FALLBACK_COLORS[hash % REVEAL_FALLBACK_COLORS.length];
 }
 
 interface ClipPathRevealProps {
   children: React.ReactNode;
   colorKey: string;
+  className?: string;
 }
 
-export function ClipPathReveal({ children, colorKey }: ClipPathRevealProps) {
+export function ClipPathReveal({ children, colorKey, className }: ClipPathRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -43,12 +63,14 @@ export function ClipPathReveal({ children, colorKey }: ClipPathRevealProps) {
       gsap.set(overlay, { clipPath: "inset(0% 0% 0% 0%)" });
       gsap.to(overlay, {
         clipPath: "inset(100% 0% 0% 0%)",
-        duration: 1.5,
-        ease: "power3.out",
+        duration: 2,
+        ease: "power2.out",
         scrollTrigger: {
           trigger: container,
           start: "top 85%",
-          toggleActions: "play none none none",
+          end: "bottom 15%",
+          // Open on scroll down into view; close again when scrolling back up
+          toggleActions: "play reverse play reverse",
         },
       });
     }, container);
@@ -57,7 +79,10 @@ export function ClipPathReveal({ children, colorKey }: ClipPathRevealProps) {
   }, [colorKey]);
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden">
+    <div
+      ref={containerRef}
+      className={`relative overflow-hidden${className ? ` ${className}` : ""}`}
+    >
       {children}
       <div
         ref={overlayRef}

@@ -5,6 +5,7 @@ import { BackgroundParticles } from "@/components/background-particles";
 import { DetailCard } from "@/components/detail-card";
 import { HomeDetailGrid } from "@/components/home-detail-grid";
 import { PortfolioFilterProvider } from "@/components/portfolio-filter-context";
+import UserCursor from "@/components/user-cursor";
 import { getDesignOfTheDay } from "@/lib/design-of-the-day";
 
 function CuratorCredit() {
@@ -27,6 +28,7 @@ function CuratorCredit() {
 export function HomePageContent() {
   return (
     <PortfolioFilterProvider>
+      <UserCursor />
       <BackgroundParticles fullScreen />
       <div className="relative z-10">
         <section

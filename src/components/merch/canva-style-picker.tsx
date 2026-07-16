@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { CANVA_FONT, CANVA_PRIMARY, CANVA_RADIUS, CANVA_SPACE } from "@/components/merch/merch-tokens";
 import { FP_SPRING } from "@/components/merch/merch-motion";
@@ -84,14 +84,10 @@ export function CanvaStyleTile({
   const svgPreview = imagePreview && isSvgPreview(preview);
   const tileRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    if (!selected) return;
-    const frame = requestAnimationFrame(() => scrollTileIntoView(tileRef.current));
-    return () => cancelAnimationFrame(frame);
-  }, [selected]);
-
   const handleSelect = () => {
     onSelect?.();
+    // Only scroll on user selection — never on mount, or the sheet opens
+    // mid-form (past "Describe the Graphic") while the sheet is still animating.
     requestAnimationFrame(() => scrollTileIntoView(tileRef.current));
   };
 

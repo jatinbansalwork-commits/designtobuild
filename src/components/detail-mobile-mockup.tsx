@@ -5,6 +5,7 @@ import { KalashSaveMorePreview } from "@/components/kalash-save-more-preview";
 import { SaltmineFinGuardPreview } from "@/components/saltmine-finguard-preview";
 import { MerchPhoneShell } from "@/components/merch-phone-shell";
 import { SaltminePlanPreview } from "@/components/saltmine-plan-preview";
+import { DETAIL_POPUP_MEDIA_CLASS } from "@/lib/detail-popup-media";
 import { PHONE_FRAME, phoneFrameDropShadowStyle, phoneFrameStyle, phoneScreenInset, phoneScreenStyle } from "@/lib/phone-frame";
 import { IPAD_FRAME, ipadFrameDropShadowStyle, ipadFrameStyle, ipadScreenInset, ipadScreenStyle } from "@/lib/ipad-frame";
 import Image from "next/image";
@@ -19,7 +20,7 @@ interface DetailMobileMockupProps {
   flow?: MockupFlow;
   title: string;
   compact?: boolean;
-  /** 16:9 popup canvas — used in the detail preview modal */
+  /** Fixed 16:9 popup canvas — shared FreshPrints media area rule */
   preview?: boolean;
 }
 
@@ -101,7 +102,7 @@ export function DetailMobileMockup({
     return (
       <div
         className={`relative flex w-full items-center justify-center overflow-hidden ${
-          preview ? "aspect-video" : compact ? "" : "aspect-[4/5] md:aspect-video"
+          preview ? DETAIL_POPUP_MEDIA_CLASS : compact ? "" : "aspect-[4/5] md:aspect-video"
         }`}
         style={{ backgroundColor: color, ...(compact && aspectRatio ? { aspectRatio } : {}) }}
       >
@@ -121,7 +122,7 @@ export function DetailMobileMockup({
     return (
       <div
         className={`relative flex w-full items-center justify-center overflow-hidden ${
-          preview ? "aspect-video p-6 md:p-10" : compact ? "p-2" : "aspect-[16/10] p-6"
+          preview ? `${DETAIL_POPUP_MEDIA_CLASS} p-6 md:p-10` : compact ? "p-2" : "aspect-[16/10] p-6"
         }`}
         style={{
           backgroundColor: color,
@@ -148,7 +149,7 @@ export function DetailMobileMockup({
   return (
     <div
       className={`relative flex w-full items-center justify-center overflow-hidden ${
-        preview ? "aspect-video" : compact ? "" : "aspect-[4/5] md:aspect-video"
+        preview ? DETAIL_POPUP_MEDIA_CLASS : compact ? "" : "aspect-[4/5] md:aspect-video"
       }`}
       style={{ backgroundColor: color, ...(compact && aspectRatio ? { aspectRatio } : {}) }}
     >

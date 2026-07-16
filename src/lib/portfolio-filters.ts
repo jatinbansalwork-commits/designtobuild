@@ -1,15 +1,11 @@
 export const PORTFOLIO_FILTERS = [
   "All",
   "AI",
-  "Education",
+  "Illustration",
   "Finance",
-  "Entertainment",
-  "Food & Drink",
-  "Health & Fitness",
-  "Lifestyle",
+  "Motion Graphic",
   "Ecommerce",
   "SaaS",
-  "Sports",
 ] as const;
 
 export type PortfolioFilter = (typeof PORTFOLIO_FILTERS)[number];

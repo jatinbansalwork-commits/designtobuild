@@ -89,7 +89,7 @@ export function DetailModal({ detail, standalone = false }: DetailModalProps) {
       </div>
 
       <article
-        className="fixed inset-0 z-[100] border-x-0 border-border bg-surface-secondary sm:border-0 md:inset-auto md:top-1/2 md:left-1/2 md:max-h-[min(90vh,1440px)] md:w-[calc(100%-2rem)] md:max-w-[67.2rem] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-none md:border md:shadow-2xl"
+        className="fixed inset-0 z-[100] border-x-0 border-border bg-surface-secondary sm:border-0 md:inset-auto md:top-1/2 md:left-1/2 md:max-h-[min(90vh,1440px)] md:w-[calc(100%-2rem)] md:max-w-[67.2rem] md:-translate-x-1/2 md:-translate-y-1/2 md:rounded-xl md:border md:shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-label={`${detail.title} preview`}

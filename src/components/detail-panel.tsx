@@ -1,8 +1,9 @@
-import Image from "next/image";
 import type { DetailItem } from "@/lib/details-data";
+import { DETAIL_POPUP_MEDIA_CLASS } from "@/lib/detail-popup-media";
 import { DetailCanvasFrame } from "@/components/detail-canvas-frame";
 import { DetailCanvasFrameContent } from "@/components/detail-canvas-frame-content";
 import { DetailMobileMockup } from "@/components/detail-mobile-mockup";
+import { DetailPopupImage } from "@/components/detail-popup-image";
 import { DetailPopupMeta } from "@/components/detail-popup-meta";
 import { DetailVideoPlayer } from "@/components/detail-video-player";
 
@@ -30,11 +31,16 @@ export function DetailPanel({
         ) : (
           <div
             className={`flex w-full overflow-hidden ${
-              preview ? "aspect-video bg-white p-8" : ""
+              preview
+                ? `${DETAIL_POPUP_MEDIA_CLASS}${detail.media.canvasFrame ? " bg-white p-8" : ""}`
+                : ""
             }`}
             style={{
               aspectRatio: preview ? undefined : detail.media.aspectRatio,
-              backgroundColor: preview ? "#ffffff" : detail.media.color,
+              backgroundColor:
+                preview && detail.media.canvasFrame
+                  ? "#ffffff"
+                  : detail.media.color,
             }}
           >
             {detail.media.canvasFrame ? (
@@ -56,22 +62,19 @@ export function DetailPanel({
           </div>
         )
       ) : detail.media.type === "video" ? (
-        <DetailVideoPlayer src={detail.media.src} title={detail.title} />
+        <DetailVideoPlayer
+          src={detail.media.src}
+          title={detail.title}
+          preview={preview}
+          fallbackColor={detail.upcoming ? "#385980" : "#000000"}
+        />
       ) : (
-        <div
-          className={`relative flex w-full items-center justify-center overflow-hidden bg-black ${
-            preview ? "aspect-video" : ""
-          }`}
-        >
-          <Image
-            src={detail.media.src}
-            alt={detail.title}
-            width={1920}
-            height={1080}
-            className={preview ? "h-full w-full object-contain" : "h-auto w-full"}
-            priority
-          />
-        </div>
+        <DetailPopupImage
+          src={detail.media.src}
+          title={detail.title}
+          cover={false}
+          fallbackColor={detail.upcoming ? "#385980" : "#000000"}
+        />
       )}
     </div>
   );
