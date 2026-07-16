@@ -382,16 +382,30 @@ export default function UserCursor(props: Partial<Props>) {
     );
   }, [label, name, textColor, size, classNames?.labelText]);
 
-  // Hide the OS cursor on the document while the custom cursor is active.
+  // Hide the OS cursor everywhere — body-level cursor:none is overridden by
+  // cursor-pointer / cursor:text on links, buttons, and inputs.
   useEffect(() => {
     if (!fullScreen || !hideNativeCursor || isTouchDevice || isStatic) return;
     if (typeof document === "undefined") return;
-    const prev = document.documentElement.style.cursor;
-    document.documentElement.style.cursor = "none";
-    document.body.style.cursor = "none";
+
+    const STYLE_ID = "user-cursor-hide-native";
+    let styleEl = document.getElementById(STYLE_ID) as HTMLStyleElement | null;
+    if (!styleEl) {
+      styleEl = document.createElement("style");
+      styleEl.id = STYLE_ID;
+      styleEl.textContent = `
+        html.user-cursor-active,
+        html.user-cursor-active * {
+          cursor: none !important;
+        }
+      `;
+      document.head.appendChild(styleEl);
+    }
+
+    document.documentElement.classList.add("user-cursor-active");
     return () => {
-      document.documentElement.style.cursor = prev;
-      document.body.style.cursor = prev;
+      document.documentElement.classList.remove("user-cursor-active");
+      styleEl?.remove();
     };
   }, [fullScreen, hideNativeCursor, isTouchDevice, isStatic]);
 
