@@ -182,13 +182,13 @@ export function DetailPopupMeta({
       ) : null}
 
       <div className="mt-5 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-text-tertiary">
+        <DetailViewCount slug={detail.slug} />
         {detail.upcoming ? null : (
           <>
-            <DetailViewCount slug={detail.slug} />
             <span aria-hidden>·</span>
+            <time dateTime={detailDateTime(detail.date)}>{detail.date}</time>
           </>
         )}
-        <time dateTime={detailDateTime(detail.date)}>{detail.date}</time>
       </div>
     </div>
   );
