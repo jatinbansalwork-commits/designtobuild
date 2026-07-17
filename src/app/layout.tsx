@@ -113,7 +113,7 @@ export default function RootLayout({
     >
       <body className="flex min-h-screen flex-col bg-surface text-text-primary antialiased">
         <SiteJsonLd />
-        <div className="mx-auto flex w-full flex-1 flex-col sm:max-w-2xl lg:max-w-4xl xl:max-w-6xl sm:px-0 sm:pb-16 sm:pt-0 pb-12 pt-6">
+        <div className="flex w-full flex-1 flex-col">
           {children}
         </div>
         {modal}

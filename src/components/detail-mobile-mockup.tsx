@@ -20,6 +20,8 @@ interface DetailMobileMockupProps {
   flow?: MockupFlow;
   title: string;
   compact?: boolean;
+  /** Fill a variable-size editorial grid tile instead of using a fixed ratio. */
+  fill?: boolean;
   /** Fixed 16:9 popup canvas — shared FreshPrints media area rule */
   preview?: boolean;
 }
@@ -82,6 +84,7 @@ export function DetailMobileMockup({
   flow,
   title,
   compact = false,
+  fill = false,
   preview = false,
 }: DetailMobileMockupProps) {
   const isKalashFlow = flow === "kalash" || flow === "kalash-save-more";
@@ -102,6 +105,8 @@ export function DetailMobileMockup({
     return (
       <div
         className={`relative flex w-full items-center justify-center overflow-hidden ${
+          fill ? "h-full " : ""
+        }${
           preview ? DETAIL_POPUP_MEDIA_CLASS : compact ? "" : "aspect-[4/5] md:aspect-video"
         }`}
         style={{ backgroundColor: color, ...(compact && aspectRatio ? { aspectRatio } : {}) }}
@@ -122,6 +127,8 @@ export function DetailMobileMockup({
     return (
       <div
         className={`relative flex w-full items-center justify-center overflow-hidden ${
+          fill ? "h-full " : ""
+        }${
           preview ? `${DETAIL_POPUP_MEDIA_CLASS} p-6 md:p-10` : compact ? "p-2" : "aspect-[16/10] p-6"
         }`}
         style={{
@@ -149,6 +156,8 @@ export function DetailMobileMockup({
   return (
     <div
       className={`relative flex w-full items-center justify-center overflow-hidden ${
+        fill ? "h-full " : ""
+      }${
         preview ? DETAIL_POPUP_MEDIA_CLASS : compact ? "" : "aspect-[4/5] md:aspect-video"
       }`}
       style={{ backgroundColor: color, ...(compact && aspectRatio ? { aspectRatio } : {}) }}
