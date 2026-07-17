@@ -295,6 +295,10 @@ const UPCOMING_SLOT_MEDIA: Record<number, UpcomingSlotMedia> = {
     video:
       "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/9L4mIylEa79TkW75HIuwCzQxE.mp4",
   },
+  26: {
+    title: "Monkey King",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%207.svg",
+  },
 };
 
 function createUpcomingSlot(index: number): DetailItem {
@@ -333,7 +337,7 @@ function createUpcomingSlot(index: number): DetailItem {
   };
 }
 
-export const UPCOMING_SLOTS: DetailItem[] = Array.from({ length: 25 }, (_, i) =>
+export const UPCOMING_SLOTS: DetailItem[] = Array.from({ length: 26 }, (_, i) =>
   createUpcomingSlot(i + 1),
 );
 
