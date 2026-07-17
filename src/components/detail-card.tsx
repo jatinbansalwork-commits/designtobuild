@@ -3,7 +3,6 @@
 import Link from "next/link";
 import type { DetailItem } from "@/lib/details-data";
 import { ClipPathReveal } from "@/components/clip-path-reveal";
-import { DesignOfTheDayBadge } from "@/components/design-of-the-day-badge";
 import { DetailMediaPreview } from "@/components/detail-media-preview";
 import { ShareDetailButton } from "@/components/share-detail-button";
 
@@ -30,7 +29,6 @@ export function DetailCard({
       >
         <div className={`flex w-full flex-col ${uniformHeight ? "h-full" : ""}`}>
           <div className="relative">
-            {featured ? <DesignOfTheDayBadge /> : null}
             <ShareDetailButton
               slug={detail.slug}
               title={detail.title}

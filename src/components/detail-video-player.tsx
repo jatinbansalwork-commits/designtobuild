@@ -3,28 +3,24 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play, Volume2, VolumeX } from "lucide-react";
 import { DETAIL_POPUP_MEDIA_CLASS } from "@/lib/detail-popup-media";
-import { useMediaBackdropColor } from "@/hooks/use-media-backdrop-color";
 
 interface DetailVideoPlayerProps {
   src: string;
   title: string;
   /** Lock to the shared 16:9 popup canvas (FreshPrints rule). */
   preview?: boolean;
-  fallbackColor?: string;
 }
 
 export function DetailVideoPlayer({
   src,
   title,
   preview = false,
-  fallbackColor = "#000000",
 }: DetailVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(true);
   const [muted, setMuted] = useState(true);
   const [speed, setSpeed] = useState(1);
   const [loop, setLoop] = useState(true);
-  const backdrop = useMediaBackdropColor(videoRef, src, fallbackColor);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -57,18 +53,14 @@ export function DetailVideoPlayer({
 
   return (
     <div
-      className={`group relative ${
+      className={`group relative bg-black ${
         preview ? DETAIL_POPUP_MEDIA_CLASS : "w-full overflow-hidden"
       }`}
-      style={{
-        backgroundColor: backdrop,
-        ...(preview ? undefined : { maxHeight: "80vh" }),
-      }}
+      style={preview ? undefined : { maxHeight: "80vh" }}
     >
       <video
         ref={videoRef}
         src={src}
-        crossOrigin="anonymous"
         autoPlay
         loop={loop}
         muted={muted}

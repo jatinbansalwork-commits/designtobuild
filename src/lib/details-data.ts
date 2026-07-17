@@ -1,4 +1,4 @@
-import { getFreshPrintsProjectUrl, getKalashAppUrl } from "@/lib/site-url";
+import { getAbsoluteUrl, getFreshPrintsProjectUrl, getKalashAppUrl } from "@/lib/site-url";
 
 export type DetailCategory =
   | "Design"
@@ -168,66 +168,143 @@ export const SALTMINE_DETAIL: DetailItem = {
 /** @deprecated Use SALTMINE_DETAIL */
 export const COMING_SOON_DETAIL = SALTMINE_DETAIL;
 
-const UPCOMING_SLOT_ART: Record<number, string> = {
-  1: "/assets/upcoming-slot-frame.svg",
-  2: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%202.svg",
-  3: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%204.svg",
-  4: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%205.svg",
-  12: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame.png",
-  13: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%201321314967.png",
-  14: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%201321314914.png",
-  15: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/P6r4FYRwrzoeiot6tTArrPFSQI.webp",
-  16: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/kddVPtRKUV1wGirlo4ho2RIypg.webp",
-  17: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/te9NzGh3Pyl3njhZBICpep3m9vc.webp",
-  18: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/DGNxIehGCQSruXK14E8gJCNB6a4.webp",
-  19: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/CPpp4OTltNDnEx0Q4E7PY0zRNT8.avif",
-  20: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/mWI4cFrnSgDolWqxydcUnfyhaE.avif",
-  21: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/qP5YVSpFq05EhrX4zhqeSIxtit4.avif",
-  22: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/TIcket.png",
-  23: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/jar.png",
-  24: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/don%27t%20burn%20youself.gif",
+type UpcomingSlotMedia = {
+  title: string;
+  art?: string;
+  video?: string;
+  /** External / related project link shown on the title */
+  projectUrl?: string;
 };
 
-const UPCOMING_SLOT_VIDEO: Record<number, string> = {
-  5: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/mgSFjnByFieompNVtqKVZ5gRE0.mp4",
-  6: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/JGAEwcjrlYlecJ5u9sucL6bfCXI%20%281%29.mp4",
-  7: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/UP3Nn2hAjJmYcjYDyozMbtBA8D4.mp4",
-  8: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/UaoftDpqn187UvBDpp6GsCDVFyU.mp4",
-  9: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/WRfEXvj0Fy7XlCGS1DPYVnLD6OM%20%281%29.mp4",
-  10: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/pDBtnxUzJmrLJ2YlDXld932Skhs.mp4",
-  11: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/1425XAHPiav1RbL3397N87ens.mp4",
-  25: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/9L4mIylEa79TkW75HIuwCzQxE.mp4",
-};
+function projectUrlForName(title: string): string | undefined {
+  const name = title.toLowerCase();
+  if (name.includes("freshprints")) return getFreshPrintsProjectUrl();
+  if (name.includes("kalash")) return getKalashAppUrl();
+  if (name.includes("saltmine")) return getAbsoluteUrl("/detail/saltmine");
+  if (name.includes("finguard")) return getAbsoluteUrl("/detail/finguard");
+  return undefined;
+}
 
-const UPCOMING_SLOT_TITLES: Record<number, string> = {
-  5: "Saltbot - Report",
-  6: "Concept-FreshPrints AI",
-  7: "Tonpool - Onboarding",
-  8: "Tonpool - Onboarding",
-  9: "Tonpool - Onboarding",
-  10: "Share Your Thought",
-  11: "FreshPrints - Image AI",
-  13: "Piggy",
-  14: "Piggy - Branding",
-  15: "Saltmine - 1",
-  16: "Saltmine - 2",
-  17: "Saltmine - 3",
-  18: "Saltmine - 4",
-  19: "Kalash - Rewards",
-  20: "Kalash - Rewards",
-  21: "Kalash - Rewards",
-  22: "Kalash - Rewards",
-  23: "Kalash - Rewards",
-  24: "Don't Burn yourself",
-  25: "Tonpool - Onboarding",
+/** Slot media keyed by grid index — URLs sit with their project title. */
+const UPCOMING_SLOT_MEDIA: Record<number, UpcomingSlotMedia> = {
+  1: {
+    title: "Cisco Security - Topology",
+    art: "/assets/upcoming-slot-frame.svg",
+  },
+  2: {
+    title: "Cisco Security - Topology",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%202.svg",
+  },
+  3: {
+    title: "Cisco Security - Topology",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%204.svg",
+  },
+  4: {
+    title: "Cisco Security - Topology",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%205.svg",
+  },
+  5: {
+    title: "Saltbot - Report",
+    video:
+      "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/mgSFjnByFieompNVtqKVZ5gRE0.mp4",
+  },
+  6: {
+    title: "Concept-FreshPrints AI",
+    video:
+      "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/JGAEwcjrlYlecJ5u9sucL6bfCXI%20%281%29.mp4",
+  },
+  7: {
+    title: "Tonpool - Onboarding",
+    video:
+      "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/UP3Nn2hAjJmYcjYDyozMbtBA8D4.mp4",
+  },
+  8: {
+    title: "Tonpool - Onboarding",
+    video:
+      "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/UaoftDpqn187UvBDpp6GsCDVFyU.mp4",
+  },
+  9: {
+    title: "Tonpool - Onboarding",
+    video:
+      "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/WRfEXvj0Fy7XlCGS1DPYVnLD6OM%20%281%29.mp4",
+  },
+  10: {
+    title: "Share Your Thought",
+    video:
+      "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/pDBtnxUzJmrLJ2YlDXld932Skhs.mp4",
+  },
+  11: {
+    title: "FreshPrints - Image AI",
+    video:
+      "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/1425XAHPiav1RbL3397N87ens.mp4",
+  },
+  12: {
+    title: "Cisco Security - Topology",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame.png",
+  },
+  13: {
+    title: "Piggy",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%201321314967.png",
+  },
+  14: {
+    title: "Piggy - Branding",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/Frame%201321314914.png",
+  },
+  15: {
+    title: "Saltmine - 1",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/P6r4FYRwrzoeiot6tTArrPFSQI.webp",
+  },
+  16: {
+    title: "Saltmine - 2",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/kddVPtRKUV1wGirlo4ho2RIypg.webp",
+  },
+  17: {
+    title: "Saltmine - 3",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/te9NzGh3Pyl3njhZBICpep3m9vc.webp",
+  },
+  18: {
+    title: "Saltmine - 4",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/DGNxIehGCQSruXK14E8gJCNB6a4.webp",
+  },
+  19: {
+    title: "Kalash - Rewards",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/CPpp4OTltNDnEx0Q4E7PY0zRNT8.avif",
+  },
+  20: {
+    title: "Kalash - Rewards",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/mWI4cFrnSgDolWqxydcUnfyhaE.avif",
+  },
+  21: {
+    title: "Kalash - Rewards",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/qP5YVSpFq05EhrX4zhqeSIxtit4.avif",
+  },
+  22: {
+    title: "Kalash - Rewards",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/TIcket.png",
+  },
+  23: {
+    title: "Kalash - Rewards",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/jar.png",
+  },
+  24: {
+    title: "Don't Burn yourself",
+    art: "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/don%27t%20burn%20youself.gif",
+  },
+  25: {
+    title: "Tonpool - Onboarding",
+    video:
+      "https://vpocozyaql1wuw3p.public.blob.vercel-storage.com/design%20to%20build/9L4mIylEa79TkW75HIuwCzQxE.mp4",
+  },
 };
 
 function createUpcomingSlot(index: number): DetailItem {
-  const video = UPCOMING_SLOT_VIDEO[index];
-  const art = UPCOMING_SLOT_ART[index];
+  const slot = UPCOMING_SLOT_MEDIA[index] ?? {
+    title: "Cisco Security - Topology",
+  };
+  const { title, art, video } = slot;
   const isGif = Boolean(art && /\.gif(?:$|[?#])/i.test(art));
   const tag = video || isGif ? "Motion Graphic" : "Illustration";
-  const title = UPCOMING_SLOT_TITLES[index] ?? "Cisco Security - Topology";
+  const projectUrl = slot.projectUrl ?? projectUrlForName(title);
 
   return {
     slug: `slot-${index}`,
@@ -240,6 +317,7 @@ function createUpcomingSlot(index: number): DetailItem {
     categories: ["Design"],
     portfolioTags: [tag],
     extraTags: [tag],
+    projectUrl,
     date: "July 16, 2026",
     author: "Rene Wang",
     authorHandle: "renedotwang",

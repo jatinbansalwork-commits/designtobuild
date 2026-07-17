@@ -66,14 +66,12 @@ export function DetailPanel({
           src={detail.media.src}
           title={detail.title}
           preview={preview}
-          fallbackColor={detail.upcoming ? "#385980" : "#000000"}
         />
       ) : (
         <DetailPopupImage
           src={detail.media.src}
           title={detail.title}
           cover={false}
-          fallbackColor={detail.upcoming ? "#385980" : "#000000"}
         />
       )}
     </div>

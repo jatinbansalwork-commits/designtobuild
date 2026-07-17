@@ -6,7 +6,7 @@ import { DetailCard } from "@/components/detail-card";
 import { HomeDetailGrid } from "@/components/home-detail-grid";
 import { PortfolioFilterProvider } from "@/components/portfolio-filter-context";
 import UserCursor from "@/components/user-cursor";
-import { getDesignOfTheDay } from "@/lib/design-of-the-day";
+import { FRESHPRINTS_DETAIL } from "@/lib/details-data";
 
 function CuratorCredit() {
   return (
@@ -45,7 +45,7 @@ export function HomePageContent() {
           </div>
 
           <div className="relative z-10 mt-8 w-full px-4 sm:px-0">
-            <DetailCard detail={getDesignOfTheDay()} featured />
+            <DetailCard detail={FRESHPRINTS_DETAIL} featured />
           </div>
         </section>
 

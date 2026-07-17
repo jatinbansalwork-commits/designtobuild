@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
-import { getGridProjects } from "@/lib/design-of-the-day";
+import { GRID_DETAILS } from "@/lib/details-data";
 import { GridShotCard } from "@/components/grid-shot-card";
 import { PortfolioFilterBar } from "@/components/portfolio-filter-bar";
 import { usePortfolioFilter } from "@/components/portfolio-filter-context";
@@ -10,12 +10,11 @@ export function HomeDetailGrid() {
   const portfolioFilter = usePortfolioFilter();
   const filter = portfolioFilter?.filter ?? "All";
   const setFilter = portfolioFilter?.setFilter ?? (() => {});
-  const gridProjects = useMemo(() => getGridProjects(), []);
 
   const filtered = useMemo(() => {
-    if (filter === "All") return gridProjects;
-    return gridProjects.filter((detail) => detail.portfolioTags?.includes(filter));
-  }, [filter, gridProjects]);
+    if (filter === "All") return GRID_DETAILS;
+    return GRID_DETAILS.filter((detail) => detail.portfolioTags?.includes(filter));
+  }, [filter]);
 
   return (
     <>
