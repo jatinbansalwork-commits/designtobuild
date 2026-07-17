@@ -48,6 +48,23 @@ interface ClipPathRevealProps {
   className?: string;
 }
 
+/** The grid lives in a nested scroll panel on desktop but scrolls with the
+ * window on mobile — ScrollTrigger must watch whichever one actually scrolls. */
+function findScrollParent(el: HTMLElement): HTMLElement | null {
+  let node = el.parentElement;
+  while (node) {
+    const overflowY = getComputedStyle(node).overflowY;
+    if (
+      (overflowY === "auto" || overflowY === "scroll") &&
+      node.scrollHeight > node.clientHeight
+    ) {
+      return node;
+    }
+    node = node.parentElement;
+  }
+  return null;
+}
+
 export function ClipPathReveal({ children, colorKey, className }: ClipPathRevealProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -59,6 +76,8 @@ export function ClipPathReveal({ children, colorKey, className }: ClipPathReveal
 
     gsap.registerPlugin(ScrollTrigger);
 
+    const scroller = findScrollParent(container);
+
     const ctx = gsap.context(() => {
       gsap.set(overlay, { clipPath: "inset(0% 0% 0% 0%)" });
       gsap.to(overlay, {
@@ -67,6 +86,7 @@ export function ClipPathReveal({ children, colorKey, className }: ClipPathReveal
         ease: "power2.out",
         scrollTrigger: {
           trigger: container,
+          ...(scroller ? { scroller } : {}),
           start: "top 85%",
           end: "bottom 15%",
           // Open on scroll down into view; close again when scrolling back up

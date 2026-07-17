@@ -1,49 +1,117 @@
 "use client";
 
-import Link from "next/link";
-import { Play } from "lucide-react";
+import { useRouter } from "next/navigation";
+import type { CSSProperties, KeyboardEvent, MouseEvent } from "react";
+import { ArrowUpRight, MousePointer2, Play } from "lucide-react";
 import type { DetailItem } from "@/lib/details-data";
 import { ClipPathReveal } from "@/components/clip-path-reveal";
 import { DetailMediaPreview } from "@/components/detail-media-preview";
 
-/** Dribbble shot grid — 4:3 thumbnail, 12px radius, title below (no card chrome). */
-export const DRIBBBLE_SHOT_ASPECT = "4 / 3";
+export type EditorialCardLayout = {
+  columns: number;
+  rows: number;
+  tabletColumns?: number;
+  tabletRows?: number;
+};
 
-export function GridShotCard({ detail }: { detail: DetailItem }) {
+export function GridShotCard({
+  detail,
+  layout,
+  priority = false,
+}: {
+  detail: DetailItem;
+  layout: EditorialCardLayout;
+  priority?: boolean;
+}) {
+  const router = useRouter();
+  const href = `/detail/${detail.slug}`;
+  const isVideo = detail.media.type === "video";
+  const isInteractive = detail.categories.includes("Build");
+  const style = {
+    "--card-cols": layout.columns,
+    "--card-rows": layout.rows,
+    "--card-tablet-cols": layout.tabletColumns ?? Math.min(layout.columns, 6),
+    "--card-tablet-rows": layout.tabletRows ?? layout.rows,
+  } as CSSProperties;
+
+  function isEmbeddedControl(target: EventTarget | null) {
+    return (
+      target instanceof Element &&
+      Boolean(
+        target.closest(
+          "button, a, input, select, textarea, [role='button'], [role='slider'], [contenteditable='true']",
+        ),
+      )
+    );
+  }
+
+  function openProject(event: MouseEvent<HTMLElement>) {
+    if (isEmbeddedControl(event.target)) return;
+    router.push(href);
+  }
+
+  function openProjectFromKeyboard(event: KeyboardEvent<HTMLElement>) {
+    if (event.target !== event.currentTarget) return;
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    router.push(href);
+  }
+
   return (
-    <Link
-      href={`/detail/${detail.slug}`}
-      className="group block h-full no-underline text-inherit hover:text-inherit"
+    <article
+      role="link"
+      tabIndex={0}
+      aria-label={`${detail.title} — ${detail.description ?? "project"}`}
+      onClick={openProject}
+      onKeyDown={openProjectFromKeyboard}
+      onMouseEnter={() => router.prefetch(href)}
+      className="variant-project-card group relative block min-h-0 cursor-pointer overflow-hidden rounded-lg border border-white/[0.08] bg-surface-secondary text-inherit shadow-[0_1px_0_rgba(255,255,255,0.04)] transition-[border-color,transform,box-shadow] duration-300 hover:-translate-y-0.5 hover:border-white/20 hover:shadow-[0_18px_45px_rgba(0,0,0,0.28)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#02BCEA]"
+      style={style}
     >
-      <div
-        className={`relative w-full overflow-hidden rounded-xl ${
-          detail.upcoming ? "bg-[#385980]" : "bg-surface-secondary"
-        }`}
-        style={{ aspectRatio: DRIBBBLE_SHOT_ASPECT }}
-      >
-        {detail.media.type === "video" ? (
+      <div className="variant-project-media relative h-full w-full overflow-hidden">
+        {isVideo || isInteractive ? (
           <span
-            className="pointer-events-none absolute top-2 right-2 z-20 inline-flex size-8 items-center justify-center rounded-full bg-black/65 text-white shadow-sm backdrop-blur-sm"
-            aria-label="Video"
-            title="Video"
+            className="pointer-events-none absolute top-3 right-3 z-30 inline-flex size-8 items-center justify-center rounded-full border border-white/15 bg-black/55 text-white shadow-sm backdrop-blur-md transition-transform duration-300 group-hover:scale-105"
+            aria-label={isVideo ? "Video" : "Interactive project"}
+            title={isVideo ? "Video" : "Interactive project"}
           >
-            <Play className="size-3.5 fill-current" aria-hidden />
+            {isVideo ? (
+              <Play className="size-3.5 fill-current" aria-hidden />
+            ) : (
+              <MousePointer2 className="size-3.5" aria-hidden />
+            )}
           </span>
         ) : null}
+
         <ClipPathReveal colorKey={detail.slug} className="h-full w-full">
-          <div className="h-full w-full transition-transform duration-300 group-hover:scale-[1.02]">
+          <div className="h-full w-full transition-transform duration-700 ease-out group-hover:scale-[1.025]">
             <DetailMediaPreview
               media={detail.media}
               title={detail.title}
-              aspectRatio={DRIBBBLE_SHOT_ASPECT}
               cover
+              fill
+              priority={priority}
             />
           </div>
         </ClipPathReveal>
+
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/85 via-black/35 to-transparent px-4 pt-16 pb-4">
+          <div className="flex items-end justify-between gap-4">
+            <div className="min-w-0">
+              <p className="truncate text-[15px] font-medium tracking-[-0.01em] text-white">
+                {detail.title}
+              </p>
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.12em] text-white/60">
+                {detail.description ?? detail.portfolioTags?.[0] ?? "Project"}
+              </p>
+            </div>
+            <ArrowUpRight
+              className="size-4 shrink-0 translate-y-1 text-white/55 opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+              aria-hidden
+            />
+          </div>
+        </div>
       </div>
-      <p className="mt-3 text-[13px] font-medium leading-snug text-text-primary">
-        {detail.title}
-      </p>
-    </Link>
+    </article>
   );
 }

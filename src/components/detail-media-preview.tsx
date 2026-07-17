@@ -11,6 +11,7 @@ interface DetailMediaPreviewProps {
   priority?: boolean;
   aspectRatio?: string;
   cover?: boolean;
+  fill?: boolean;
 }
 
 export function DetailMediaPreview({
@@ -19,8 +20,9 @@ export function DetailMediaPreview({
   priority = false,
   aspectRatio,
   cover = false,
+  fill = false,
 }: DetailMediaPreviewProps) {
-  const ratio = aspectRatio ?? media.aspectRatio;
+  const ratio = fill ? undefined : (aspectRatio ?? media.aspectRatio);
 
   if (media.type === "color" && media.mockup) {
     return (
@@ -32,6 +34,7 @@ export function DetailMediaPreview({
         flow={media.mockup.flow}
         title={title}
         compact={cover}
+        fill={fill}
       />
     );
   }
@@ -39,8 +42,10 @@ export function DetailMediaPreview({
   if (media.type === "color" && media.canvasFrame) {
     return (
       <div
-        className="relative w-full shrink-0 overflow-hidden bg-surface"
-        style={{ aspectRatio: ratio }}
+        className={`relative w-full shrink-0 overflow-hidden bg-surface ${
+          fill ? "h-full" : ""
+        }`}
+        style={ratio ? { aspectRatio: ratio } : undefined}
       >
         <div
           className="flex h-full w-full items-center justify-center"
@@ -62,9 +67,9 @@ export function DetailMediaPreview({
 
   return (
     <div
-      className="relative w-full shrink-0 overflow-hidden"
+      className={`relative w-full shrink-0 overflow-hidden ${fill ? "h-full" : ""}`}
       style={{
-        aspectRatio: ratio,
+        ...(ratio ? { aspectRatio: ratio } : {}),
         backgroundColor:
           media.type === "color"
             ? media.color
