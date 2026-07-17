@@ -339,8 +339,8 @@ export const UPCOMING_SLOTS: DetailItem[] = Array.from({ length: 25 }, (_, i) =>
 
 /** Portfolio grid row — shown below the featured card on the home page. */
 export const GRID_DETAILS: DetailItem[] = [
-  FRESHPRINTS_DETAIL,
   KALASH_DETAIL,
+  FRESHPRINTS_DETAIL,
   FINGUARD_DETAIL,
   SALTMINE_DETAIL,
   ...UPCOMING_SLOTS,

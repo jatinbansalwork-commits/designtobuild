@@ -43,21 +43,23 @@ export function DetailCard({
               />
             </ClipPathReveal>
           </div>
-          <div
-            className={`relative flex flex-col px-6 ${
-              uniformHeight ? "flex-1 justify-center py-5" : "gap-4 pb-6 pt-5"
-            }`}
-          >
-            <div className="relative z-10">
-              <h3
-                className={`font-medium tracking-tight text-text-primary ${
-                  uniformHeight ? "text-lg" : "text-xl"
-                }`}
-              >
-                {detail.title}
-              </h3>
+          {featured ? null : (
+            <div
+              className={`relative flex flex-col px-6 ${
+                uniformHeight ? "flex-1 justify-center py-5" : "gap-4 pb-6 pt-5"
+              }`}
+            >
+              <div className="relative z-10">
+                <h3
+                  className={`font-medium tracking-tight text-text-primary ${
+                    uniformHeight ? "text-lg" : "text-xl"
+                  }`}
+                >
+                  {detail.title}
+                </h3>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </article>
     </Link>
