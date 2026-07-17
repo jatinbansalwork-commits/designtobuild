@@ -9,25 +9,75 @@ import {
 import { usePortfolioFilter } from "@/components/portfolio-filter-context";
 
 /**
- * A repeating justified-grid rhythm inspired by Variant's "squishy" rows.
- * Every band contains two or three cards and sums to exactly 12 desktop
- * columns (6 on tablet), preventing both isolated cards and empty grid holes.
+ * A justified-grid rhythm inspired by Variant's "squishy" rows. Cards are
+ * chunked into bands of two or three that each sum to exactly 12 desktop
+ * columns (6 on tablet). Band sizes are computed from the visible card count
+ * so no card is ever stranded alone on a row, whatever filter is active.
  */
-const EDITORIAL_LAYOUTS: EditorialCardLayout[] = [
-  // Band 1: 8 + 4
-  { columns: 8, rows: 6, tabletColumns: 4, tabletRows: 5 },
-  { columns: 4, rows: 6, tabletColumns: 2, tabletRows: 5 },
-  // Band 2: 4 + 8
-  { columns: 4, rows: 4, tabletColumns: 2, tabletRows: 4 },
-  { columns: 8, rows: 4, tabletColumns: 4, tabletRows: 4 },
-  // Band 3: 5 + 7
-  { columns: 5, rows: 5, tabletColumns: 3, tabletRows: 5 },
-  { columns: 7, rows: 5, tabletColumns: 3, tabletRows: 5 },
-  // Band 4: 3 + 5 + 4
-  { columns: 3, rows: 4, tabletColumns: 2, tabletRows: 4 },
-  { columns: 5, rows: 4, tabletColumns: 2, tabletRows: 4 },
-  { columns: 4, rows: 4, tabletColumns: 2, tabletRows: 4 },
+const TWO_CARD_PATTERNS: [number, number][] = [
+  [8, 4],
+  [4, 8],
+  [7, 5],
+  [5, 7],
 ];
+const TWO_CARD_TABLET_PATTERNS: [number, number][] = [
+  [4, 2],
+  [2, 4],
+];
+const THREE_CARD_PATTERNS: [number, number, number][] = [
+  [3, 4, 5],
+  [5, 3, 4],
+  [4, 5, 3],
+];
+const BAND_ROW_SPANS = [6, 4, 5, 4, 5];
+const BAND_SIZE_CYCLE = [2, 3, 3];
+
+function computeBandSizes(count: number): number[] {
+  const sizes: number[] = [];
+  let remaining = count;
+  let cycleIndex = 0;
+
+  while (remaining > 0) {
+    let size = Math.min(BAND_SIZE_CYCLE[cycleIndex % BAND_SIZE_CYCLE.length], remaining);
+    cycleIndex++;
+    // Never leave a single card for the final band.
+    if (remaining - size === 1) size = size === 3 ? 2 : Math.min(3, remaining);
+    sizes.push(size);
+    remaining -= size;
+  }
+  return sizes;
+}
+
+function computeLayouts(count: number): EditorialCardLayout[] {
+  const layouts: EditorialCardLayout[] = [];
+  let twoCardBands = 0;
+  let threeCardBands = 0;
+
+  computeBandSizes(count).forEach((size, bandIndex) => {
+    const rows = BAND_ROW_SPANS[bandIndex % BAND_ROW_SPANS.length];
+
+    if (size === 3) {
+      const columns = THREE_CARD_PATTERNS[threeCardBands % THREE_CARD_PATTERNS.length];
+      threeCardBands++;
+      for (const cols of columns) {
+        layouts.push({ columns: cols, rows, tabletColumns: 2, tabletRows: rows });
+      }
+    } else if (size === 2) {
+      const columns = TWO_CARD_PATTERNS[twoCardBands % TWO_CARD_PATTERNS.length];
+      const tabletColumns =
+        TWO_CARD_TABLET_PATTERNS[twoCardBands % TWO_CARD_TABLET_PATTERNS.length];
+      twoCardBands++;
+      columns.forEach((cols, i) => {
+        layouts.push({ columns: cols, rows, tabletColumns: tabletColumns[i], tabletRows: rows });
+      });
+    } else {
+      // Only possible when a filter matches exactly one project.
+      layouts.push({ columns: 12, rows, tabletColumns: 6, tabletRows: rows });
+    }
+  });
+
+  return layouts;
+}
 
 export function HomeDetailGrid() {
   const portfolioFilter = usePortfolioFilter();
@@ -38,13 +88,15 @@ export function HomeDetailGrid() {
     return GRID_DETAILS.filter((detail) => detail.portfolioTags?.includes(filter));
   }, [filter]);
 
+  const layouts = useMemo(() => computeLayouts(filtered.length), [filtered.length]);
+
   return (
     <div className="variant-project-grid" aria-live="polite">
       {filtered.map((detail, index) => (
         <GridShotCard
           key={detail.slug}
           detail={detail}
-          layout={EDITORIAL_LAYOUTS[index % EDITORIAL_LAYOUTS.length]}
+          layout={layouts[index]}
           priority={index < 2}
         />
       ))}

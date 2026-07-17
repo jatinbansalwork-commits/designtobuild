@@ -39,6 +39,7 @@ const VIEW_SEEDS: Record<string, number> = {
   "slot-23": 96,
   "slot-24": 311,
   "slot-25": 67,
+  "slot-26": 43,
 };
 
 const SLUG_ALIASES: Record<string, string> = {
