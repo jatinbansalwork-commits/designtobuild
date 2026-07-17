@@ -25,7 +25,11 @@ const nestedScreenRadiusPx = Math.max(
   ),
 );
 
-const borderWidth = `max(6px, ${bezelWidthPercent}%)`;
+/**
+ * Keep compact iPad previews proportional. The old 6px floor made the
+ * bezel noticeably heavier as the mockup shrank on narrow screens.
+ */
+const borderWidth = `max(1px, ${bezelWidthPercent}%)`;
 
 /** Shared iPad frame tokens — proportional radius/border at any mockup size. */
 export const IPAD_FRAME = {

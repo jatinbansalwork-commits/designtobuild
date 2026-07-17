@@ -3,6 +3,7 @@ import type { DetailMedia } from "@/lib/details-data";
 import { DetailCanvasFrame } from "@/components/detail-canvas-frame";
 import { DetailCanvasFrameContent } from "@/components/detail-canvas-frame-content";
 import { DetailMobileMockup } from "@/components/detail-mobile-mockup";
+import { HoverPlayVideo } from "@/components/hover-play-video";
 
 interface DetailMediaPreviewProps {
   media: DetailMedia;
@@ -77,14 +78,10 @@ export function DetailMediaPreview({
           <div className="h-full w-full" style={{ backgroundColor: media.color }} aria-hidden />
         )
       ) : media.type === "video" ? (
-        <video
+        <HoverPlayVideo
           src={media.src}
-          loop
-          muted
-          playsInline
-          autoPlay
+          title={title}
           className={cover ? "absolute inset-0 h-full w-full object-cover" : "h-auto w-full"}
-          aria-label={title}
         />
       ) : /\.gif(?:$|[?#])/i.test(media.src) ? (
         // eslint-disable-next-line @next/next/no-img-element -- animated GIF needs native img

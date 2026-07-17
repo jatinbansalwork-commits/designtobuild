@@ -26,8 +26,12 @@ const nestedScreenRadiusPx = Math.max(
   ),
 );
 
-/** Shared border width — same token for frame stroke and screen inset. */
-const borderWidth = `max(3px, ${bezelWidthPercent}%)`;
+/**
+ * Shared border width — same token for frame stroke and screen inset.
+ * A 1px floor keeps tiny mobile previews crisp without making their bezel
+ * look disproportionately heavy; larger frames retain the designed ratio.
+ */
+const borderWidth = `max(1px, ${bezelWidthPercent}%)`;
 
 /** Shared phone frame tokens — proportional radius/border at any mockup size. */
 export const PHONE_FRAME = {
@@ -67,7 +71,7 @@ export const phoneFrameDropShadowStyle = {
 } as const;
 
 /**
- * Match the real rendered border width (including the `max(3px, …)` floor)
+ * Match the real rendered border width (including the `max(1px, …)` floor)
  * so the white screen never sits under a thinner inset than the bezel.
  */
 export const phoneScreenInset = {

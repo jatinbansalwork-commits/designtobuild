@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { Play } from "lucide-react";
 import type { DetailItem } from "@/lib/details-data";
 import { ClipPathReveal } from "@/components/clip-path-reveal";
 import { DetailMediaPreview } from "@/components/detail-media-preview";
-import { ShareDetailButton } from "@/components/share-detail-button";
 
 /** Dribbble shot grid — 4:3 thumbnail, 12px radius, title below (no card chrome). */
 export const DRIBBBLE_SHOT_ASPECT = "4 / 3";
@@ -21,11 +21,15 @@ export function GridShotCard({ detail }: { detail: DetailItem }) {
         }`}
         style={{ aspectRatio: DRIBBBLE_SHOT_ASPECT }}
       >
-        <ShareDetailButton
-          slug={detail.slug}
-          title={detail.title}
-          className="absolute top-2 right-2 z-20"
-        />
+        {detail.media.type === "video" ? (
+          <span
+            className="pointer-events-none absolute top-2 right-2 z-20 inline-flex size-8 items-center justify-center rounded-full bg-black/65 text-white shadow-sm backdrop-blur-sm"
+            aria-label="Video"
+            title="Video"
+          >
+            <Play className="size-3.5 fill-current" aria-hidden />
+          </span>
+        ) : null}
         <ClipPathReveal colorKey={detail.slug} className="h-full w-full">
           <div className="h-full w-full transition-transform duration-300 group-hover:scale-[1.02]">
             <DetailMediaPreview
