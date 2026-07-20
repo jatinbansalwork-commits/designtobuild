@@ -52,6 +52,37 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+/* Soft content protection — deterrents only; OS screenshots cannot be blocked. */
+html.content-protected {
+  -webkit-touch-callout: none;
+}
+
+html.content-protected body {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+html.content-protected input,
+html.content-protected textarea,
+html.content-protected select,
+html.content-protected [contenteditable="true"],
+html.content-protected [data-allow-copy] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+html.content-protected img,
+html.content-protected picture,
+html.content-protected video {
+  -webkit-user-drag: none;
+}
+
+@media print {
+  html.content-protected body {
+    display: none !important;
+  }
+}
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
