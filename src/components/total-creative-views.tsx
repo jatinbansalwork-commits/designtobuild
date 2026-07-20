@@ -2,8 +2,17 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { Eye } from "lucide-react";
+import {
+  hasShownNightWink,
+  markNightWinkShown,
+} from "@/lib/easter-eggs";
 import { VIEWS_CHANGED_EVENT } from "@/lib/view-events";
-import { baselineSeedViews } from "@/lib/view-seeds";
+import {
+  baselineSeedViews,
+  dailySeedBonus,
+  DAILY_SEED_PER_NIGHT,
+  indiaCalendarDate,
+} from "@/lib/view-seeds";
 
 const CACHE_KEY = "dtb-total-views-cache";
 
@@ -40,6 +49,8 @@ function writeCachedTotal(views: number) {
 export function TotalCreativeViews({ className = "" }: { className?: string }) {
   const seedFallback = baselineSeedViews();
   const [views, setViews] = useState<number | null>(null);
+  const [exact, setExact] = useState(false);
+  const [nightWink, setNightWink] = useState(false);
 
   const refresh = useCallback(
     async (opts?: { optimisticBump?: boolean }) => {
@@ -104,18 +115,58 @@ export function TotalCreativeViews({ className = "" }: { className?: string }) {
     };
   }, [refresh]);
 
+  // Night mode wink: after an IST midnight seed lands, whisper once per day.
+  useEffect(() => {
+    let hideTimer: number | undefined;
+    const todayIst = indiaCalendarDate();
+    const daily = dailySeedBonus();
+    if (daily <= 0 || hasShownNightWink(todayIst)) return;
+
+    queueMicrotask(() => {
+      setNightWink(true);
+      markNightWinkShown(todayIst);
+      hideTimer = window.setTimeout(() => setNightWink(false), 4200);
+    });
+
+    return () => window.clearTimeout(hideTimer);
+  }, []);
+
   const display = views ?? seedFallback;
+  const exactLabel = display.toLocaleString("en-US");
+  const countLabel = exact ? exactLabel : formatViewCount(display);
 
   return (
-    <p
-      className={`inline-flex items-center gap-1.5 text-sm text-text-secondary ${className}`}
-      title={`${display.toLocaleString("en-US")} total views across all creatives`}
-    >
-      <Eye className="size-3.5 opacity-80" strokeWidth={2} aria-hidden />
-      <span className="tabular-nums">
-        <span className="font-medium text-text-primary">{formatViewCount(display)}</span>
-        <span className="ml-1 text-text-tertiary">total views</span>
-      </span>
-    </p>
+    <div className={className}>
+      <p
+        className="inline-flex items-center gap-1.5 text-sm text-text-secondary"
+        title={`${exactLabel} total views across all creatives`}
+      >
+        <Eye className="size-3.5 opacity-80" strokeWidth={2} aria-hidden />
+        <span className="tabular-nums">
+          <button
+            type="button"
+            onClick={() => setExact((value) => !value)}
+            aria-pressed={exact}
+            aria-label={
+              exact
+                ? `Hide exact total. Currently ${exactLabel} views`
+                : `Show exact total. Currently about ${formatViewCount(display)} views`
+            }
+            className="font-medium text-text-primary underline-offset-2 transition-colors hover:text-text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#02BCEA] focus-visible:ring-offset-2 focus-visible:ring-offset-surface"
+          >
+            {countLabel}
+          </button>
+          <span className="ml-1 text-text-tertiary">total views</span>
+        </span>
+      </p>
+      {nightWink ? (
+        <p
+          className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-[#02BCEA]"
+          role="status"
+        >
+          +{DAILY_SEED_PER_NIGHT} from last night
+        </p>
+      ) : null}
+    </div>
   );
 }

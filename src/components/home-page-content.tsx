@@ -1,7 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import { EasterEggToastHost } from "@/components/easter-egg-toast";
 import { HomeDetailGrid } from "@/components/home-detail-grid";
+import { KonamiSurprise } from "@/components/konami-surprise";
 import { PortfolioFilterBar } from "@/components/portfolio-filter-bar";
 import {
   PortfolioFilterProvider,
@@ -9,6 +11,7 @@ import {
 } from "@/components/portfolio-filter-context";
 import { TotalCreativeViews } from "@/components/total-creative-views";
 import UserCursor from "@/components/user-cursor";
+import { playShutterTick } from "@/lib/shutter-tick";
 
 function CuratorCredit() {
   return (
@@ -35,6 +38,8 @@ function PortfolioHome() {
   return (
     <>
       <UserCursor />
+      <KonamiSurprise />
+      <EasterEggToastHost />
 
       <main className="relative z-10 min-h-[100dvh] lg:grid lg:h-[100dvh] lg:grid-cols-[20rem_minmax(0,1fr)] lg:overflow-hidden xl:grid-cols-[24rem_minmax(0,1fr)]">
         <aside className="relative z-20 flex min-h-[24rem] flex-col justify-between border-b border-border/60 bg-surface/90 px-5 py-6 backdrop-blur-xl sm:px-8 sm:py-8 lg:h-[100dvh] lg:min-h-0 lg:border-r lg:border-b-0">
@@ -76,7 +81,16 @@ function PortfolioHome() {
           </div>
         </aside>
 
-        <section className="variant-gallery-scroll relative min-h-screen bg-surface px-2 py-2 sm:px-3 sm:py-3 lg:h-[100dvh] lg:min-h-0 lg:overflow-y-auto">
+        <section
+          className="variant-gallery-scroll relative min-h-screen bg-surface px-2 py-2 sm:px-3 sm:py-3 lg:h-[100dvh] lg:min-h-0 lg:overflow-y-auto"
+          onClick={(event) => {
+            const target = event.target as Element | null;
+            if (!target) return;
+            if (target.closest(".variant-project-card")) return;
+            if (target.closest("button, a, input, select, textarea")) return;
+            playShutterTick();
+          }}
+        >
           <HomeDetailGrid />
         </section>
       </main>

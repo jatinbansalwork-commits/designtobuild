@@ -1,11 +1,21 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { CSSProperties, KeyboardEvent, MouseEvent } from "react";
 import { ArrowUpRight, MousePointer2, Play } from "lucide-react";
 import type { DetailItem } from "@/lib/details-data";
 import { ClipPathReveal } from "@/components/clip-path-reveal";
 import { DetailMediaPreview } from "@/components/detail-media-preview";
+import {
+  HANDSHAKE_CHANGED_EVENT,
+  HANDSHAKE_GLYPHS,
+  isBuildHandshakeSlug,
+  markHandshake,
+  readHandshakeSet,
+  showEasterToast,
+  type BuildHandshakeSlug,
+} from "@/lib/easter-eggs";
 
 export type EditorialCardLayout = {
   columns: number;
@@ -27,6 +37,19 @@ export function GridShotCard({
   const href = `/detail/${detail.slug}`;
   const isVideo = detail.media.type === "video";
   const isInteractive = detail.categories.includes("Build");
+  const isHandshakeBuild = isBuildHandshakeSlug(detail.slug);
+  const [handshakeCollected, setHandshakeCollected] = useState(false);
+
+  useEffect(() => {
+    if (!isHandshakeBuild) return;
+    const sync = () => {
+      setHandshakeCollected(readHandshakeSet().has(detail.slug as BuildHandshakeSlug));
+    };
+    sync();
+    window.addEventListener(HANDSHAKE_CHANGED_EVENT, sync);
+    return () => window.removeEventListener(HANDSHAKE_CHANGED_EVENT, sync);
+  }, [detail.slug, isHandshakeBuild]);
+
   const style = {
     "--card-cols": layout.columns,
     "--card-rows": layout.rows,
@@ -45,8 +68,21 @@ export function GridShotCard({
     );
   }
 
+  function collectHandshake() {
+    if (!isHandshakeBuild) return;
+    const { newlyComplete } = markHandshake(detail.slug);
+    if (newlyComplete) {
+      showEasterToast("Build handshake complete");
+    }
+  }
+
   function openProject(event: MouseEvent<HTMLElement>) {
-    if (isEmbeddedControl(event.target)) return;
+    if (isEmbeddedControl(event.target)) {
+      // Interacting inside a live Build mockup still counts toward the handshake.
+      collectHandshake();
+      return;
+    }
+    collectHandshake();
     router.push(href);
   }
 
@@ -54,6 +90,7 @@ export function GridShotCard({
     if (event.target !== event.currentTarget) return;
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
+    collectHandshake();
     router.push(href);
   }
 
@@ -61,6 +98,7 @@ export function GridShotCard({
     <article
       role="link"
       tabIndex={0}
+      data-project-slug={detail.slug}
       aria-label={`${detail.title} — ${detail.description ?? "project"}`}
       onClick={openProject}
       onKeyDown={openProjectFromKeyboard}
@@ -80,6 +118,16 @@ export function GridShotCard({
             ) : (
               <MousePointer2 className="size-3.5" aria-hidden />
             )}
+          </span>
+        ) : null}
+
+        {isHandshakeBuild && handshakeCollected ? (
+          <span
+            className="pointer-events-none absolute top-3 left-3 z-30 inline-flex size-7 items-center justify-center rounded-full border border-[#02BCEA]/40 bg-black/55 font-mono text-[12px] text-[#02BCEA] shadow-sm backdrop-blur-md"
+            aria-hidden
+            title="Build handshake"
+          >
+            {HANDSHAKE_GLYPHS[detail.slug as BuildHandshakeSlug]}
           </span>
         ) : null}
 
