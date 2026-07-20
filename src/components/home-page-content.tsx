@@ -7,6 +7,7 @@ import {
   PortfolioFilterProvider,
   usePortfolioFilter,
 } from "@/components/portfolio-filter-context";
+import { TotalCreativeViews } from "@/components/total-creative-views";
 import UserCursor from "@/components/user-cursor";
 
 function CuratorCredit() {
@@ -54,6 +55,8 @@ function PortfolioHome() {
             <p className="mt-6 max-w-[20rem] text-sm leading-6 text-text-secondary">
               Curiosity and creativity have always been central to my life. When I&apos;m not tinkering at work, I love exploring, learning, trying new things and diving into new hobbies. Here are just a few of the things I&apos;ve made.
             </p>
+
+            <TotalCreativeViews className="mt-4" />
 
             <div className="mt-7">
               <CuratorCredit />
