@@ -3,6 +3,11 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  hasPlayedShutterGlitch,
+  markShutterGlitchPlayed,
+  SHUTTER_GLITCH_SLUG,
+} from "@/lib/easter-eggs";
 
 /** Mix of accents so adjacent grid shutters don’t all read as blue. */
 const REVEAL_COLORS_BY_SLUG: Record<string, string> = {
@@ -77,22 +82,55 @@ export function ClipPathReveal({ children, colorKey, className }: ClipPathReveal
     gsap.registerPlugin(ScrollTrigger);
 
     const scroller = findScrollParent(container);
+    const shouldGlitch =
+      colorKey === SHUTTER_GLITCH_SLUG && !hasPlayedShutterGlitch();
 
     const ctx = gsap.context(() => {
       gsap.set(overlay, { clipPath: "inset(0% 0% 0% 0%)" });
-      gsap.to(overlay, {
-        clipPath: "inset(100% 0% 0% 0%)",
-        duration: 2,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: container,
-          ...(scroller ? { scroller } : {}),
-          start: "top 85%",
-          end: "bottom 15%",
-          // Open on scroll down into view; close again when scrolling back up
-          toggleActions: "play reverse play reverse",
-        },
-      });
+
+      if (shouldGlitch) {
+        const glitchTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: container,
+            ...(scroller ? { scroller } : {}),
+            start: "top 85%",
+            once: true,
+            onEnter: () => markShutterGlitchPlayed(),
+          },
+        });
+
+        // Open → snap shut → reopen: one-time glitch on Monk.
+        glitchTl
+          .to(overlay, {
+            clipPath: "inset(100% 0% 0% 0%)",
+            duration: 0.85,
+            ease: "power2.out",
+          })
+          .to(overlay, {
+            clipPath: "inset(18% 0% 0% 0%)",
+            duration: 0.28,
+            ease: "power3.in",
+          })
+          .to(overlay, {
+            clipPath: "inset(100% 0% 0% 0%)",
+            duration: 1.1,
+            ease: "power2.out",
+          });
+      } else {
+        gsap.to(overlay, {
+          clipPath: "inset(100% 0% 0% 0%)",
+          duration: 2,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: container,
+            ...(scroller ? { scroller } : {}),
+            start: "top 85%",
+            end: "bottom 15%",
+            // Open on scroll down into view; close again when scrolling back up
+            toggleActions: "play reverse play reverse",
+          },
+        });
+      }
     }, container);
 
     return () => ctx.revert();

@@ -98,6 +98,29 @@ export default function UserCursor(props: Partial<Props>) {
   // fullScreen mode). `pressed` = mouse button is currently down.
   const [hovering, setHovering] = useState(false);
   const [pressed, setPressed] = useState(false);
+  const [shiftHeld, setShiftHeld] = useState(false);
+
+  // Easter egg: hold Shift and the pill becomes a personal alias.
+  useEffect(() => {
+    if (isStatic || isTouchDevice) return;
+    const onDown = (event: KeyboardEvent) => {
+      if (event.key === "Shift") setShiftHeld(true);
+    };
+    const onUp = (event: KeyboardEvent) => {
+      if (event.key === "Shift") setShiftHeld(false);
+    };
+    const onBlur = () => setShiftHeld(false);
+    window.addEventListener("keydown", onDown);
+    window.addEventListener("keyup", onUp);
+    window.addEventListener("blur", onBlur);
+    return () => {
+      window.removeEventListener("keydown", onDown);
+      window.removeEventListener("keyup", onUp);
+      window.removeEventListener("blur", onBlur);
+    };
+  }, [isStatic, isTouchDevice]);
+
+  const displayName = shiftHeld ? "JB" : name;
 
   // Fixed spring configs (good defaults). Arrow is snappier; label trails.
   const arrowSpring = useMemo<SpringOptions>(
@@ -377,10 +400,10 @@ export default function UserCursor(props: Partial<Props>) {
           letterSpacing: 0.1,
         }}
       >
-        {name}
+        {displayName}
       </div>
     );
-  }, [label, name, textColor, size, classNames?.labelText]);
+  }, [label, displayName, textColor, size, classNames?.labelText]);
 
   // Hide the OS cursor everywhere — body-level cursor:none is overridden by
   // cursor-pointer / cursor:text on links, buttons, and inputs.
