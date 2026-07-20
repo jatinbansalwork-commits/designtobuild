@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
+import { notifyViewsChanged } from "@/lib/view-events";
 
 const CACHE_PREFIX = "dtb-views-cache:";
 
@@ -89,11 +90,14 @@ function DetailViewCountInner({
           if (!cancelled) setReady(true);
           return;
         }
-        const data = (await res.json()) as { views?: number };
+        const data = (await res.json()) as { views?: number; counted?: boolean };
         if (typeof data.views === "number" && !cancelled) {
           writeCachedViews(slug, data.views);
           setViews(data.views);
           setReady(true);
+          if (shouldRecord && data.counted) {
+            notifyViewsChanged({ slug, counted: true });
+          }
         }
       } catch {
         if (!cancelled) setReady(true);
