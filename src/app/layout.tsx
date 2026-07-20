@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, JetBrains_Mono, Source_Serif_4, Space_Grotesk } from "next/font/google";
+import { ContentProtection } from "@/components/content-protection";
 import { SiteJsonLd } from "@/components/site-json-ld";
 import { SITE_DESCRIPTION, SITE_KEYWORDS, SITE_LOCALE, SITE_NAME, TWITTER_HANDLE } from "@/lib/seo";
 import { getAbsoluteUrl, getSiteUrl } from "@/lib/site-url";
@@ -112,6 +113,7 @@ export default function RootLayout({
       className={`dark ${ibmPlexSans.variable} ${spaceGrotesk.variable} ${sourceSerif4.variable} ${geistMono.variable}`}
     >
       <body className="flex min-h-screen flex-col bg-surface text-text-primary antialiased">
+        <ContentProtection />
         <SiteJsonLd />
         <div className="flex w-full flex-1 flex-col">
           {children}
