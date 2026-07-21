@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
+import { useScreenshotDetection } from "camerashy";
+import { mountPrintStyle, unmountPrintStyle } from "camerashy/core";
 
 function isEditableTarget(target: EventTarget | null) {
   if (!(target instanceof HTMLElement)) return false;
@@ -19,13 +21,28 @@ function isModified(event: KeyboardEvent) {
 }
 
 /**
- * Soft content protection: blocks casual copy, save, print, and image drag.
- * OS screenshots and determined users cannot be stopped from a webpage.
+ * Soft content protection + camerashy screenshot shielding.
+ * Blurs the page on screenshot shortcuts (visual deterrent only).
  */
 export function ContentProtection() {
+  const shielded = useScreenshotDetection({ sensitivity: "balanced" });
+
+  useEffect(() => {
+    mountPrintStyle();
+    return () => unmountPrintStyle();
+  }, []);
+
   useEffect(() => {
     document.documentElement.classList.add("content-protected");
+    return () => document.documentElement.classList.remove("content-protected");
+  }, []);
 
+  useEffect(() => {
+    document.documentElement.classList.toggle("camerashy-shielded", shielded);
+    return () => document.documentElement.classList.remove("camerashy-shielded");
+  }, [shielded]);
+
+  useEffect(() => {
     const onContextMenu = (event: MouseEvent) => {
       if (isEditableTarget(event.target)) return;
       event.preventDefault();
@@ -68,7 +85,6 @@ export function ContentProtection() {
     window.addEventListener("beforeprint", onBeforePrint);
 
     return () => {
-      document.documentElement.classList.remove("content-protected");
       document.removeEventListener("contextmenu", onContextMenu);
       document.removeEventListener("copy", onCopyCut);
       document.removeEventListener("cut", onCopyCut);
