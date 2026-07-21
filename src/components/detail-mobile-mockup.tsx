@@ -54,15 +54,34 @@ function PhoneDeviceFrame({
   children,
   className,
   aspectRatio = PHONE_FRAME.aspectRatio,
+  /** Fit inside parent while preserving aspect ratio (grid tiles). */
+  contain = false,
 }: {
   children: ReactNode;
   className?: string;
   aspectRatio?: string;
+  contain?: boolean;
 }) {
+  // Parse "393 / 852" (or "393/852") into width/height for contain sizing.
+  const [arW, arH] = aspectRatio.split("/").map((part) => Number(part.trim()));
+  const hasRatio = Number.isFinite(arW) && Number.isFinite(arH) && arW > 0 && arH > 0;
+
   return (
     <div
       className={`relative shrink-0 ${className ?? ""}`}
-      style={{ ...phoneFrameDropShadowStyle, aspectRatio }}
+      style={{
+        ...phoneFrameDropShadowStyle,
+        aspectRatio,
+        ...(contain && hasRatio
+          ? {
+              // Fit tile: never force both height and a narrower max-width (that stretches).
+              height: `min(90cqh, calc(90cqw * ${arH} / ${arW}))`,
+              width: `min(90cqw, calc(90cqh * ${arW} / ${arH}))`,
+              maxHeight: "none",
+              maxWidth: "none",
+            }
+          : {}),
+      }}
     >
       <div className="relative h-full w-full overflow-hidden isolate" style={phoneFrameStyle}>
         <div
@@ -97,7 +116,7 @@ export function DetailMobileMockup({
 
   if (isMerchFlow) {
     const phoneSizeClass = compact
-      ? "h-[90%] w-auto max-w-[46%]"
+      ? ""
       : preview
         ? "h-[90%] w-auto"
         : "h-[94%] w-auto max-w-[min(72%,22rem)] md:max-w-[min(36%,24rem)]";
@@ -105,13 +124,17 @@ export function DetailMobileMockup({
     return (
       <div
         className={`relative flex w-full items-center justify-center overflow-hidden ${
-          fill ? "h-full " : ""
-        }${
+          compact || fill ? "[container-type:size] " : ""
+        }${fill ? "h-full " : ""}${
           preview ? DETAIL_POPUP_MEDIA_CLASS : compact ? "" : "aspect-[4/5] md:aspect-video"
         }`}
         style={{ backgroundColor: color, ...(compact && aspectRatio ? { aspectRatio } : {}) }}
       >
-        <PhoneDeviceFrame className={phoneSizeClass} aspectRatio={mockupAspectRatio}>
+        <PhoneDeviceFrame
+          className={phoneSizeClass}
+          aspectRatio={mockupAspectRatio}
+          contain={compact || fill}
+        >
           <MerchPhoneShell interactive={preview} />
         </PhoneDeviceFrame>
       </div>
@@ -148,7 +171,7 @@ export function DetailMobileMockup({
   }
 
   const phoneSizeClass = compact
-    ? "h-[90%] w-auto max-w-[46%]"
+    ? ""
     : preview
       ? "h-[90%] w-auto"
       : "h-[94%] w-auto max-w-[min(72%,22rem)] md:max-w-[min(36%,24rem)]";
@@ -156,13 +179,17 @@ export function DetailMobileMockup({
   return (
     <div
       className={`relative flex w-full items-center justify-center overflow-hidden ${
-        fill ? "h-full " : ""
-      }${
+        compact || fill ? "[container-type:size] " : ""
+      }${fill ? "h-full " : ""}${
         preview ? DETAIL_POPUP_MEDIA_CLASS : compact ? "" : "aspect-[4/5] md:aspect-video"
       }`}
       style={{ backgroundColor: color, ...(compact && aspectRatio ? { aspectRatio } : {}) }}
     >
-      <PhoneDeviceFrame className={phoneSizeClass} aspectRatio={mockupAspectRatio}>
+      <PhoneDeviceFrame
+        className={phoneSizeClass}
+        aspectRatio={mockupAspectRatio}
+        contain={compact || fill}
+      >
         {showKalashFlow ? (
           <DetailKalashFlowEmbed initialScreen={embedInitialScreen} />
         ) : showKalashLivePreview ? (

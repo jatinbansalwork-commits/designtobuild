@@ -60,6 +60,7 @@ html.content-protected {
 html.content-protected body {
   -webkit-user-select: none;
   user-select: none;
+  transition: filter 0.15s ease-in-out;
 }
 
 html.content-protected input,
@@ -75,6 +76,14 @@ html.content-protected img,
 html.content-protected picture,
 html.content-protected video {
   -webkit-user-drag: none;
+}
+
+/* camerashy: instant blur on screenshot shortcuts, soft fade when safe again */
+html.camerashy-shielded body {
+  filter: blur(20px) !important;
+  transition: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
 }
 
 @media print {
